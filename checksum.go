@@ -11,87 +11,99 @@ import (
 	"os"
 )
 
-// Checksum return checksum
-func Checksum(mode string, file string) string {
+// Checksum 校验和计算
+func Checksum(mode string, fileURL string) string {
 	var result string
 	switch mode {
 	case "crc32":
-		result = hashCRC32(file)
+		result = crc32Sum(fileURL)
 	case "md5":
-		result = hashMD5(file)
+		result = md5Sum(fileURL)
 	case "sha1":
-		result = hashSHA1(file)
+		result = sha1Sum(fileURL)
 	case "sha256":
-		result = hashSHA256(file)
+		result = sha256Sum(fileURL)
 	default:
 		return ""
 	}
 	return result
 }
-func hashCRC32(file string) string {
+
+// crc32Sum crc32校验和
+func crc32Sum(fileURL string) string {
 	// open file
-	fileObj, err := os.Open(file)
+	fileObj, err := os.Open(fileURL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// close file
-	defer fileObj.Close()
-
-	// copy filedata
+	// copy file data
 	hash := crc32.NewIEEE()
 	_, err = io.Copy(hash, fileObj)
-
 	// hex to string
 	hashString := hex.EncodeToString(hash.Sum(nil))
-	return hashString
-}
-func hashMD5(file string) string {
-	// open file
-	fileObj, err := os.Open(file)
+	// close file
+	err = fileObj.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// close file
-	defer fileObj.Close()
+	return hashString
+}
 
-	// copy filedata
+// md5Sum md5校验和
+func md5Sum(fileURL string) string {
+	// open file
+	fileObj, err := os.Open(fileURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// copy file data
 	hash := md5.New()
 	_, err = io.Copy(hash, fileObj)
-
+	// close file
+	err = fileObj.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 	// hex to string
 	hashString := hex.EncodeToString(hash.Sum(nil))
 	return hashString
 }
-func hashSHA1(file string) string {
+
+// sha1Sum sha1校验和
+func sha1Sum(fileURL string) string {
 	// open file
-	fileObj, err := os.Open(file)
+	fileObj, err := os.Open(fileURL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// close file
-	defer fileObj.Close()
-
-	// copy filedata
+	// copy file data
 	hash := sha1.New()
 	_, err = io.Copy(hash, fileObj)
-
+	// close file
+	err = fileObj.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 	// hex to string
 	hashString := hex.EncodeToString(hash.Sum(nil))
 	return hashString
 }
-func hashSHA256(file string) string {
+
+// sha256Sum sha256校验和
+func sha256Sum(fileURL string) string {
 	// open file
-	fileObj, err := os.Open(file)
+	fileObj, err := os.Open(fileURL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// close file
-	defer fileObj.Close()
-
-	// copy filedata
+	// copy file data
 	hash := sha256.New()
 	_, err = io.Copy(hash, fileObj)
-
+	// close file
+	err = fileObj.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 	// hex to string
 	hashString := hex.EncodeToString(hash.Sum(nil))
 	return hashString
