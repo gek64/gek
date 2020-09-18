@@ -1,4 +1,4 @@
-package mypkg
+package gopkg
 
 import (
 	"container/list"
@@ -60,10 +60,10 @@ func PathWalk(path string, listPointer interface{}, filter []string, subFolder b
 				l := listPointer.(*[]string)
 				*l = append(*l, itemPath)
 			case *list.List:
-				list := listPointer.(*list.List)
-				list.PushBack(itemPath)
+				l := listPointer.(*list.List)
+				l.PushBack(itemPath)
 			default:
-				return fmt.Errorf("Wrong type of input l")
+				return fmt.Errorf("wrong type of input l")
 			}
 		}
 

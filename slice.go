@@ -1,4 +1,4 @@
-package mypkg
+package gopkg
 
 // SliceClear 清空切片
 func SliceClear(s *[]interface{}) {

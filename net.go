@@ -1,58 +1,56 @@
-package mypkg
+package gopkg
 
 import (
-	"fmt"
+	"log"
 	"net"
-	"os"
 	"strings"
 )
 
 // IPGet Get the IP address of the physical network adapter, ignore the virtual machine network adapter
 func IPGet() map[string]string {
 	IPMap := make(map[string]string)
-	nfaces, err := net.Interfaces()
+	netInterfaces, err := net.Interfaces()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
-	for _, nface := range nfaces {
-		addrs, _ := nface.Addrs()
-		name := nface.Name
-		up := nface.Flags&net.FlagUp != 0
-		loopback := nface.Flags&net.FlagLoopback != 0
-		// unicast := nface.Flags&net.FlagPointToPoint != 0
-		// Multicast := nface.Flags&net.FlagMulticast != 0
-		// broadcast := nface.Flags&net.FlagBroadcast != 0
+	for _, netInterface := range netInterfaces {
+		addresses, _ := netInterface.Addrs()
+		name := netInterface.Name
+		up := netInterface.Flags&net.FlagUp != 0
+		loopback := netInterface.Flags&net.FlagLoopback != 0
+		// unicast := netInterface.Flags&net.FlagPointToPoint != 0
+		// Multicast := netInterface.Flags&net.FlagMulticast != 0
+		// broadcast := netInterface.Flags&net.FlagBroadcast != 0
 
 		// Not a Loopback address
 		if up && !loopback && !isVMAdapter(name) {
-			for _, addr := range addrs {
-				ipnet := addr.(*net.IPNet)
+			for _, addr := range addresses {
+				ipNet := addr.(*net.IPNet)
 
 				// get net.IP in *Net.IPNet
-				// ip := ipnet.IP
+				// ip := ipNet.IP
 
 				// convert ip net.IP([]byte) to ip string
-				// ipstring := ipnet.IP.String()
+				// ipString := ipNet.IP.String()
 
 				// convert ip string to ip net.IP([]byte)
-				// ip = net.ParseIP(ipstring)
+				// ip = net.ParseIP(ipString)
 
-				if ipnet.IP.To4() != nil {
-					IPMap["ipv4"] = ipnet.IP.String()
-				} else if ipnet.IP.To16() != nil {
-					IPMap["ipv6"] = ipnet.IP.String()
+				if ipNet.IP.To4() != nil {
+					IPMap["ipv4"] = ipNet.IP.String()
+				} else if ipNet.IP.To16() != nil {
+					IPMap["ipv6"] = ipNet.IP.String()
 				}
 			}
 		}
 		// Loopback address
 		if up && loopback && !isVMAdapter(name) {
-			for _, addr := range addrs {
-				ipnet := addr.(*net.IPNet)
-				if ipnet.IP.To4() != nil {
-					IPMap["loopbackv4"] = ipnet.IP.String()
-				} else if ipnet.IP.To16() != nil {
-					IPMap["loopbackv6"] = ipnet.IP.String()
+			for _, addr := range addresses {
+				ipNet := addr.(*net.IPNet)
+				if ipNet.IP.To4() != nil {
+					IPMap["loopbackv4"] = ipNet.IP.String()
+				} else if ipNet.IP.To16() != nil {
+					IPMap["loopbackv6"] = ipNet.IP.String()
 				}
 			}
 		}

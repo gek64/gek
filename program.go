@@ -1,4 +1,4 @@
-package mypkg
+package gopkg
 
 import (
 	"io"
@@ -55,9 +55,9 @@ func ProgramRealtimeOutput(cmd *exec.Cmd) error {
 	// cmdArgs := strings.Fields(cmdString)
 	// cmd := exec.Command(cmdArgs[0], cmdArgs[1:len(cmdArgs)]...)
 
-	wiriter := io.Writer(os.Stdout)
-	cmd.Stdout = wiriter
-	cmd.Stderr = wiriter
+	writer := io.Writer(os.Stdout)
+	cmd.Stdout = writer
+	cmd.Stderr = writer
 	cmd.Stdin = os.Stdin
 	err := cmd.Run()
 	return err
