@@ -1,43 +1,14 @@
 package gopkg
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
 
-func createTempFile() (*os.File, error) {
-	// Create test file
-	tmpFile, err := ioutil.TempFile("./", "testFile*.txt")
-	if err != nil {
-		return nil, err
-	}
-
-	// Remember to clean up the file afterwards
-	// defer os.Remove(tmpFile.Name())
-
-	// fmt.Println("Created File: " + tmpFile.Name())
-
-	// Example writing to the file
-	text := []byte("This is a temporary file!")
-	_, err = tmpFile.Write(text)
-	if err != nil {
-		return nil, err
-	}
-
-	// Close the file
-	err = tmpFile.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return tmpFile, nil
-}
-
 func TestChecksum(t *testing.T) {
 
 	// 创建临时文件
-	tmpFile, err := createTempFile()
+	tmpFile, err := CreateTempFile("./", "testFile*.txt", "This is a temporary file!")
 	if err != nil {
 		t.Fatal(err)
 	}
