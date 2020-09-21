@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -120,13 +119,4 @@ func PathExist(path string) bool {
 		return false
 	}
 	return false
-}
-
-// PathExecFile Return the program running path and error output
-func PathExecFile() (string, error) {
-	file, err := exec.LookPath(os.Args[0])
-	path, err := filepath.Abs(file)
-	path = filepath.Dir(path)
-	path = strings.Replace(path, "\\", "/", -1)
-	return path, err
 }
