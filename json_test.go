@@ -12,7 +12,7 @@ type testJson struct {
 	Age  int    `json:"age"`
 }
 
-func ExampleReadJSON() {
+func ExampleJsoner_ReadFromFile() {
 	// 创建临时json文件
 	f, err := CreateTempFile("./", "test*.json", "{\"name\":\"bob\",\"age\":24}")
 	if err != nil {
@@ -23,8 +23,14 @@ func ExampleReadJSON() {
 
 	// 新建结构体实例
 	tj := new(testJson)
-	// 读取json文件到结构体实例中
-	err = ReadJSON(&tj, f.Name())
+
+	// 使用json处理体读取json文件到结构体实例中
+	jsoner := new(Jsoner)
+	err = jsoner.New(&tj)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = jsoner.ReadFromFile(f.Name())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,14 +41,20 @@ func ExampleReadJSON() {
 	// {bob 24}
 }
 
-func ExampleWriteJSON() {
+func ExampleJsoner_WriteToFile() {
 	// 创建结构体实例
 	var tj = testJson{
 		Name: "bob",
 		Age:  24,
 	}
 
-	err := WriteJSON(tj, "test.json")
+	jsoner := new(Jsoner)
+	err := jsoner.New(&tj)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = jsoner.WriteToFile("test.json")
+
 	defer os.Remove("test.json")
 
 	text, err := ioutil.ReadFile("test.json")
