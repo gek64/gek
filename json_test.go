@@ -25,11 +25,11 @@ func ExampleJsoner_ReadFromFile() {
 	tj := new(testJson)
 
 	// 使用json处理体读取json文件到结构体实例中
-	jsoner := new(Jsoner)
-	err = jsoner.New(&tj)
+	jsoner, err := NewJsoner(tj)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	err = jsoner.ReadFromFile(f.Name())
 	if err != nil {
 		log.Fatal(err)
@@ -48,11 +48,11 @@ func ExampleJsoner_WriteToFile() {
 		Age:  24,
 	}
 
-	jsoner := new(Jsoner)
-	err := jsoner.New(&tj)
+	jsoner, err := NewJsoner(&tj)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	err = jsoner.WriteToFile("test.json")
 
 	defer os.Remove("test.json")

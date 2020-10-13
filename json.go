@@ -13,12 +13,14 @@ type Jsoner struct {
 }
 
 // New 输入结构体指针传入处理体jsoner,v是需要存储到的结构体实例的指针
-func (j *Jsoner) New(v interface{}) error {
+func NewJsoner(v interface{}) (*Jsoner, error) {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
-		return fmt.Errorf("%v is not of pointer type", v)
+		return nil, fmt.Errorf("%v is not of pointer type", v)
 	}
-	j.Jst = v
-	return nil
+	j := Jsoner{
+		Jst: v,
+	}
+	return &j, nil
 }
 
 // ReadFromFile 输入结构体指针与json文件路径,将json内部数据存储到结构体中,v是需要存储到的结构体实例的指针
