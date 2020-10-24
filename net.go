@@ -3,6 +3,7 @@ package gopkg
 import (
 	"log"
 	"net"
+	"net/http"
 	"strings"
 )
 
@@ -70,4 +71,23 @@ func isVMAdapter(adapterName string) bool {
 		}
 	}
 	return false
+}
+
+// 获取客户端IP
+func GetClientIP(req *http.Request) string {
+	// 查找 X-Real-Ip
+	IPAddress := req.Header.Get("X-Real-Ip")
+	// 查找 X-Forwarded-For
+	if IPAddress == "" {
+		IPS := strings.Split(req.Header.Get("X-Forwarded-For"), ",")
+		IPAddress = IPS[0]
+	}
+	// 查找 RemoteAddr
+	if IPAddress == "" {
+		IPAddress = req.RemoteAddr
+	}
+	// 分割host与ip
+	host, _, _ := net.SplitHostPort(IPAddress)
+
+	return host
 }
