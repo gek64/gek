@@ -125,6 +125,11 @@ func isPrivateIP(ip net.IP) bool {
 
 // GetPublicIP NetInterface方法获取公网地址
 func (n NetInterface) GetPublicIP(ipType string) net.IP {
+	// 如果 NetInterface 未启用,则直接返回空
+	if !n.Flags.Up {
+		return nil
+	}
+
 	switch ipType {
 	case "ipv4":
 		if n.Addr.IPv4Public.String() != "<nil>" && !isPrivateIP(n.Addr.IPv4Public) {
@@ -140,6 +145,11 @@ func (n NetInterface) GetPublicIP(ipType string) net.IP {
 
 // GetPrivateIP NetInterface方法获取私网地址
 func (n NetInterface) GetPrivateIP(ipType string) net.IP {
+	// 如果 NetInterface 未启用,则直接返回空
+	if !n.Flags.Up {
+		return nil
+	}
+
 	switch ipType {
 	case "ipv4":
 		if n.Addr.IPv4Private.String() != "<nil>" && isPrivateIP(n.Addr.IPv4Private) {
