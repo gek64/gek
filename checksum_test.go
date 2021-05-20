@@ -1,4 +1,4 @@
-package gopkg
+package vivycore
 
 import (
 	"os"
@@ -13,7 +13,12 @@ func TestChecksum(t *testing.T) {
 		t.Fatal(err)
 	}
 	// 销毁时删除临时文件
-	defer os.Remove(tmpFile.Name())
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}(tmpFile.Name())
 
 	// Table-Driven 测试用例
 	var checksumTests = []struct {

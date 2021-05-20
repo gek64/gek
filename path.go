@@ -1,4 +1,4 @@
-package gopkg
+package vivycore
 
 import (
 	"container/list"
@@ -68,12 +68,18 @@ func PathWalk(path string, listPointer interface{}, filter []string, subFolder b
 
 		// 如果file是目录并且指定递归处理,递归处理此目录下文件
 		if file.IsDir() && subFolder {
-			PathWalk(itemPath, listPointer, filter, true)
+			err := PathWalk(itemPath, listPointer, filter, true)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
 	// 切换回到原有工作路径
-	os.Chdir(OriginalWorkingPath)
+	err = os.Chdir(OriginalWorkingPath)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

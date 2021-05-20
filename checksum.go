@@ -1,4 +1,4 @@
-package gopkg
+package vivycore
 
 import (
 	"crypto/md5"

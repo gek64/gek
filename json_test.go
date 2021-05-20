@@ -1,4 +1,4 @@
-package gopkg
+package vivycore
 
 import (
 	"fmt"
@@ -19,7 +19,12 @@ func ExampleJsoner_ReadFromFile() {
 		log.Fatal(err)
 	}
 	// 删除临时json文件
-	defer os.Remove(f.Name())
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(f.Name())
 
 	// 新建结构体实例
 	tj := new(testJson)
@@ -55,7 +60,12 @@ func ExampleJsoner_WriteToFile() {
 
 	err = jsoner.WriteToFile("test.json")
 
-	defer os.Remove("test.json")
+	defer func() {
+		err := os.Remove("test.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	text, err := ioutil.ReadFile("test.json")
 

@@ -1,4 +1,4 @@
-package gopkg
+package vivycore
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ type Jsoner struct {
 	Jst interface{}
 }
 
-// New 输入结构体指针传入处理体jsoner,v是需要存储到的结构体实例的指针
+// NewJsoner 输入结构体指针传入处理体jsoner,v是需要存储到的结构体实例的指针
 func NewJsoner(v interface{}) (*Jsoner, error) {
 	if reflect.ValueOf(v).Kind() != reflect.Ptr {
 		return nil, fmt.Errorf("%v is not of pointer type", v)

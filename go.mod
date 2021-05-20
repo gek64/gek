@@ -1,3 +1,3 @@
-module github.com/cekys/gopkg
+module localhost/vivycore
 
 go 1.15
