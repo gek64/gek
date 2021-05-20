@@ -1,5 +1,4 @@
 # VIVYCORE
-- `version 0.1.0`
 - 是 `Project vivy` 项目群中使用的核心依赖包
   
 ## 编译说明
