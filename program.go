@@ -1,4 +1,4 @@
-package vivycore
+package gek
 
 import (
 	"io"

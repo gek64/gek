@@ -1,3 +1,2 @@
-module localhost/vivycore
+module "gek"
 
-go 1.15

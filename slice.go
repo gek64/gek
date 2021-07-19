@@ -1,4 +1,4 @@
-package vivycore
+package gek
 
 // SliceClear 清空切片
 func SliceClear(s *[]interface{}) {
