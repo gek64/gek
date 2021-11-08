@@ -35,7 +35,10 @@ func TestChecksum(t *testing.T) {
 
 	// 测试核心
 	for _, tt := range checksumTests {
-		actual := Checksum(tt.mode, tt.fileURL)
+		actual, err := Checksum(tt.mode, tt.fileURL)
+		if err != nil {
+			t.Errorf("%v", err)
+		}
 		if actual != tt.expected {
 			t.Errorf("Checksum(%s, %s) = %s; expected %s", tt.mode, tt.fileURL, actual, tt.expected)
 		}
