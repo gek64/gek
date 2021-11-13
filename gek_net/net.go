@@ -89,7 +89,7 @@ func NetInterfaces() ([]NetInterface, error) {
 	return netInterfaces, nil
 }
 
-// isPrivateIP IP是否属于使用IP块
+// isPrivateIP IP是否属于私有IP块
 func isPrivateIP(ip net.IP) bool {
 	var privateIPBlocks []*net.IPNet
 	for _, cidr := range []string{
