@@ -1,4 +1,4 @@
-module "tester"
+module tester
 
 require gek_checksum v0.0.0
 require gek_downloader v0.0.0
@@ -14,6 +14,7 @@ require gek_path v0.0.0
 require gek_slice v0.0.0
 require gek_string v0.0.0
 require gek_toolbox v0.0.0
+require gek_service v0.0.0
 
 replace gek_checksum => /gek_checksum
 replace gek_downloader => /gek_downloader
@@ -29,3 +30,4 @@ replace gek_path => /gek_path
 replace gek_slice => /gek_slice
 replace gek_string => /gek_string
 replace gek_toolbox => /gek_toolbox
+replace gek_service => /gek_service
