@@ -15,7 +15,7 @@ type testJson struct {
 
 func ExampleJsoner_ReadFromFile() {
 	// 创建临时json文件
-	f, err := gek_file.CreateTempFile("./", "test*.json", "{\"name\":\"bob\",\"age\":24}")
+	f, err := gek_file.CreateRandomFile("./", "test*.json", "{\"name\":\"bob\",\"age\":24}")
 	if err != nil {
 		log.Fatal(err)
 	}

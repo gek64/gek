@@ -9,7 +9,7 @@ import (
 func TestChecksum(t *testing.T) {
 
 	// 创建临时文件
-	tmpFile, err := gek_file.CreateTempFile("./", "testFile*.txt", "This is a temporary file!")
+	tmpFile, err := gek_file.CreateRandomFile("./", "testFile*.txt", "This is a temporary file!")
 	if err != nil {
 		t.Fatal(err)
 	}

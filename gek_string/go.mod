@@ -1,2 +1,1 @@
-module gek_string
-
+module "gek_string"

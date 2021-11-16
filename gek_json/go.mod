@@ -1,5 +1,4 @@
-module gek_json
-
+module "gek_json"
 
 require gek_file v0.0.0
 

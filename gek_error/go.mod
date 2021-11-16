@@ -1,1 +1,1 @@
-module gek_error
+module "gek_error"

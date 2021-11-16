@@ -1,1 +1,1 @@
-module gek_math
+module "gek_math"
