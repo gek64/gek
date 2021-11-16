@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	s := gek_service.NewService("sshd.gek_service", "")
+	s := gek_service.NewService("sshd.service", "")
 
 	code := s.Status()
 	if code != nil {
