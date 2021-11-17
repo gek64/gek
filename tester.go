@@ -1,15 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"gek_service"
+	"gek_exec"
+	"log"
 )
 
 func main() {
-	s := gek_service.NewService("sshd.service", "")
-
-	code := s.Status()
-	if code != nil {
-		fmt.Println(code)
+	err := gek_exec.Run("ping 127.0.0.1")
+	if err != nil {
+		log.Fatal(err)
 	}
 }

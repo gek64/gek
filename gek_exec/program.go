@@ -1,6 +1,7 @@
 package gek_exec
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -44,18 +45,31 @@ func FindLocation() (string, error) {
 }
 
 // StringToCmd 字符串按空格分词转换为 *exec.Cmd
-func StringToCmd(cmdString string) *exec.Cmd {
+func StringToCmd(cmdString string) (cmd *exec.Cmd) {
 	cmdArgs := strings.Fields(cmdString)
 	return exec.Command(cmdArgs[0], cmdArgs[1:]...)
 }
 
-// Run 执行命令并等待命令执行完成
-func Run(cmdString string) error {
-	cmd := StringToCmd(cmdString)
+// Run 执行命令并等待命令执行完成,命令可为 string类型或者 *exec.Cmd类型
+func Run(command interface{}) (err error) {
+	var cmd = &exec.Cmd{}
+
+	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型
+	switch command.(type) {
+	case string:
+		cmd = StringToCmd(command.(string))
+	case *exec.Cmd:
+		cmd = command.(*exec.Cmd)
+	default:
+		return fmt.Errorf("the type of command %v is not supported", command)
+	}
+
 	// 实时输出结果
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stdout
 	cmd.Stdin = os.Stdin
-	err := cmd.Run()
+
+	// 运行命令并等待命令执行完成
+	err = cmd.Run()
 	return err
 }
