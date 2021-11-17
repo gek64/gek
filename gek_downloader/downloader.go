@@ -1,4 +1,4 @@
-package main
+package gek_downloader
 
 import (
 	"io"
