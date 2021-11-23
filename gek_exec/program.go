@@ -73,3 +73,47 @@ func Run(command interface{}) (err error) {
 	err = cmd.Run()
 	return err
 }
+
+// CombinedOutput 执行命令并等待命令执行完成,返回运行后的输出和错误,命令可为 string类型或者 *exec.Cmd类型
+func CombinedOutput(command interface{}) (output string, err error) {
+	var cmd = &exec.Cmd{}
+
+	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型
+	switch command.(type) {
+	case string:
+		cmd = StringToCmd(command.(string))
+	case *exec.Cmd:
+		cmd = command.(*exec.Cmd)
+	default:
+		return "", fmt.Errorf("the type of command %v is not supported", command)
+	}
+
+	// 运行命令,获取输出和错误
+	outputByteSlice, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+	return string(outputByteSlice), err
+}
+
+// Output 执行命令并等待命令执行完成,返回运行后的输出,命令可为 string类型或者 *exec.Cmd类型
+func Output(command interface{}) (output string, err error) {
+	var cmd = &exec.Cmd{}
+
+	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型
+	switch command.(type) {
+	case string:
+		cmd = StringToCmd(command.(string))
+	case *exec.Cmd:
+		cmd = command.(*exec.Cmd)
+	default:
+		return "", fmt.Errorf("the type of command %v is not supported", command)
+	}
+
+	// 运行命令,获取输出
+	outputByteSlice, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return string(outputByteSlice), err
+}
