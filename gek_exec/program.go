@@ -9,8 +9,7 @@ import (
 )
 
 // Exist 检查指定程序是否存在于环境变量或者可执行文件的同一目录中
-func Exist(program string) (bool, string, error) {
-	var path string
+func Exist(program string) (exist bool, path string, err error) {
 	// 获取当前运行的可执行文件的目录
 	exd, err := FindLocation()
 	if err != nil {
