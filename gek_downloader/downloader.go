@@ -104,7 +104,7 @@ func ExternalDownloader(url string, outputFile ...interface{}) error {
 	for _, d := range externalDownloaders {
 		exist, _, _ := gek_exec.Exist(d)
 		if exist {
-			downloader = "aria2c"
+			downloader = d
 			break
 		}
 	}
