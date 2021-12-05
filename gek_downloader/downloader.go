@@ -3,7 +3,6 @@ package gek_downloader
 import (
 	"fmt"
 	"gek_exec"
-	"gek_file"
 	"io"
 	"log"
 	"net/http"
@@ -109,41 +108,48 @@ func ExternalDownloader(url string, outputFile ...interface{}) error {
 			break
 		}
 	}
-	// 外部下载器下载
-	switch downloader {
-	case "aria2c":
-		err := gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url))
-		if err != nil {
-			return err
-		}
-	case "wget":
-		err := gek_exec.Run(exec.Command("wget", url))
-		if err != nil {
-			return err
-		}
-	case "curl":
-		err := gek_exec.Run(exec.Command("curl", "-LOJ", url))
-		if err != nil {
-			return err
-		}
-	default:
-		return fmt.Errorf("can not find aria2c, wget and curl")
-	}
 
-	// outputFile存在则从url中提取文件名,并改名已下载文件为outputFile提供的文件名
+	// 按指定文件名下载
 	if len(outputFile) != 0 && outputFile[0] != "" {
-		fileName, err := GetFileName(url)
-		if err != nil {
-			log.Println(err)
-		}
-
-		exist, _, _ := gek_file.Exist(fileName)
-
-		if exist {
-			err := os.Rename(fileName, outputFile[0].(string))
+		switch downloader {
+		case "aria2c":
+			err := gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url, "-o", outputFile[0].(string)))
 			if err != nil {
 				return err
 			}
+		case "wget":
+			err := gek_exec.Run(exec.Command("wget", url, "-O", outputFile[0].(string)))
+			if err != nil {
+				return err
+			}
+		case "curl":
+			err := gek_exec.Run(exec.Command("curl", "-Lo", outputFile[0].(string), url))
+			if err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("can not find aria2c, wget and curl")
+		}
+	} else {
+		// 直接下载不指定输出文件名
+		switch downloader {
+		case "aria2c":
+			err := gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url))
+			if err != nil {
+				return err
+			}
+		case "wget":
+			err := gek_exec.Run(exec.Command("wget", url))
+			if err != nil {
+				return err
+			}
+		case "curl":
+			err := gek_exec.Run(exec.Command("curl", "-LOJ", url))
+			if err != nil {
+				return err
+			}
+		default:
+			return fmt.Errorf("can not find aria2c, wget and curl")
 		}
 	}
 
