@@ -1,6 +1,7 @@
 package gek_github
 
 import (
+	"fmt"
 	"gek_json"
 	"strings"
 )
@@ -40,11 +41,32 @@ func NewGithubAPI(repo string) (githubAPI *GithubAPI, err error) {
 }
 
 // SearchRelease 搜索 GithubAPI 中 Assets 中的名称,返回第一个匹配的下载链接
-func (api GithubAPI) SearchRelease(part string) (downloadUrl string) {
+func (api GithubAPI) SearchRelease(part string) (downloadUrl string, err error) {
 	for _, asset := range api.Assets {
 		if strings.Contains(asset.Name, part) {
-			return asset.BrowserDownloadURL
+			return asset.BrowserDownloadURL, nil
 		}
 	}
-	return ""
+	return "", fmt.Errorf("can not find release with part %s", part)
+}
+
+// SearchPartsInRelease 搜索 GithubAPI 中 Assets 中的多个名称,返回第一个匹配的下载链接
+func (api GithubAPI) SearchPartsInRelease(parts []string) (downloadUrl string, err error) {
+
+	for _, asset := range api.Assets {
+		var matched bool = true
+
+		for _, part := range parts {
+			if !strings.Contains(asset.Name, part) {
+				matched = false
+				break
+			}
+		}
+
+		if matched {
+			return asset.BrowserDownloadURL, nil
+		}
+	}
+
+	return "", fmt.Errorf("can not find release with parts %s", parts)
 }
