@@ -2,14 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gek_github"
+	"gek_math"
 )
 
 func main() {
-	api, err := gek_github.NewGithubAPI("gek64/WakeOnLAN")
-	if err != nil {
-		return
-	}
-
-	fmt.Println(api.SearchPartsInRelease([]string{"wakeonlan", "arm64", "linux"}))
+	fmt.Println(gek_math.RandStringRunes(5))
 }

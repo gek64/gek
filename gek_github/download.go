@@ -7,8 +7,8 @@ import (
 
 var (
 	// 系统架构来源 https://golang.org/doc/install/source#environment
-	osList   = []string{"android", "darwin", "dragonfly", "freebsd", "illumos", "ios", "js", "linux", "netbsd", "openbsd", "plan9", "solaris", "windows"}
-	archList = []string{"amd64", "386", "arm", "arm64", "ppc64le", "mips64le", "mips64", "mipsle", "mips", "s390x", "wasm"}
+	osList   = []string{"aix", "android", "darwin", "dragonfly", "freebsd", "illumos", "ios", "js", "linux", "netbsd", "openbsd", "plan9", "solaris", "windows"}
+	archList = []string{"amd64", "386", "arm64", "arm", "mips64", "mips64le", "mips", "mipsle", "ppc64", "ppc64le", "riscv64", "s390x", "wasm"}
 )
 
 // GetDownloadLink 获取Github应用对应系统/架构对的下载链接
