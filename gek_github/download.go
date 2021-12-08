@@ -2,7 +2,11 @@ package gek_github
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 	"runtime"
+	"strings"
 )
 
 var (
@@ -47,4 +51,38 @@ func GetDownloadLink(repo string, appMap map[string]string) (downloadLink string
 	}
 
 	return downloadLink, err
+}
+
+// GetFileName 从Github应用对应系统/架构对的下载链接中获取文件名
+func GetFileName(repo string, appMap map[string]string) (fileName string, err error) {
+	// 获取url
+	url, err := GetDownloadLink(repo, appMap)
+	if err != nil {
+		return "", err
+	}
+
+	// 使用get方法连接url
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(response.Body)
+
+	// 从header中提取文件路径
+	contentDisposition := response.Header.Get("Content-Disposition")
+	if contentDisposition != "" {
+		fileName = strings.Split(contentDisposition, "filename=")[1]
+	}
+
+	if fileName == "" {
+		return "", fmt.Errorf("can not get file name from %s", url)
+	}
+
+	return fileName, nil
 }

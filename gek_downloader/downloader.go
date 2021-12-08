@@ -166,8 +166,6 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 		}
 	}
 
-	// 按指定文件名下载
-
 	switch downloader {
 	case "aria2c":
 		err = gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url, "-d", outputFolder))
@@ -175,7 +173,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 			return err
 		}
 	case "wget":
-		err = gek_exec.Run(exec.Command("wget", url, "-O", "-P", outputFolder))
+		err = gek_exec.Run(exec.Command("wget", url, "-P", outputFolder, "-N"))
 		if err != nil {
 			return err
 		}
