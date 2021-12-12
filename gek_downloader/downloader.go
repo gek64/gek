@@ -168,7 +168,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 
 	switch downloader {
 	case "aria2c":
-		err = gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url, "--allow-overwrite=true", "-d", outputFolder))
+		err = gek_exec.Run(exec.Command("aria2c", "-s", "16", "-x", "16", url, "--allow-overwrite=true", "-d", outputFolder))
 		if err != nil {
 			return err
 		}
@@ -205,7 +205,7 @@ func ExternalDownloaderWithFilePath(url string, outputFile string) (err error) {
 	// 按指定文件名下载
 	switch downloader {
 	case "aria2c":
-		err = gek_exec.Run(exec.Command("aria2c", "-c", "-s", "16", "-x", "16", url, "--allow-overwrite=true", "-o", outputFile))
+		err = gek_exec.Run(exec.Command("aria2c", "-s", "16", "-x", "16", url, "--allow-overwrite=true", "-o", outputFile))
 		if err != nil {
 			return err
 		}
