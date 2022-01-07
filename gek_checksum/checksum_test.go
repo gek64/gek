@@ -12,7 +12,7 @@ func TestChecksum(t *testing.T) {
 		t.Fatal(err)
 	}
 	// 临时文件写入信息
-	_, err = tmpFile.Write([]byte("This is a temporary file!"))
+	_, err = tmpFile.WriteString("This is a temporary file!")
 	if err != nil {
 		t.Fatal(err)
 	}

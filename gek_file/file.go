@@ -50,8 +50,7 @@ func CreateRandomFile(dir string, pattern string, content string) (tmpFile *os.F
 	// defer os.Remove(tmpFile.Name())
 
 	// write to the file
-	text := []byte(content)
-	_, err = tmpFile.Write(text)
+	_, err = tmpFile.WriteString(content)
 	if err != nil {
 		return nil, err
 	}
