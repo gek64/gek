@@ -27,15 +27,3 @@ func (e *Err) New(code int, msg string) {
 	e.Code = code
 	e.Msg = msg
 }
-
-//func ErrorHandler(err error, options ...interface{}) {
-//	length := len(options)
-//	if err != nil {
-//		if length != 0 && options[0].(bool) {
-//			log.Fatalln(err)
-//		}
-//		if length == 0 || (length != 0 && !options[0].(bool)) {
-//			log.Println(err)
-//		}
-//	}
-//}

@@ -70,7 +70,7 @@ func GetFileName(repo string, appMap map[string]string) (fileName string, err er
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(response.Body)
 

@@ -26,7 +26,7 @@ func GetFileName(url string) (fileName string, err error) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(response.Body)
 
@@ -53,7 +53,7 @@ func InternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(response.Body)
 
@@ -85,10 +85,11 @@ func InternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 		return err
 	}
 
-	defer func(output *os.File) {
-		err := output.Close()
+	// 销毁时关闭文件
+	defer func(file *os.File) {
+		err = file.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(output)
 
@@ -118,7 +119,7 @@ func InternalDownloaderFilePath(url string, outputFile string) (err error) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(response.Body)
 
@@ -137,10 +138,11 @@ func InternalDownloaderFilePath(url string, outputFile string) (err error) {
 		return err
 	}
 
-	defer func(output *os.File) {
-		err := output.Close()
+	// 销毁时关闭文件
+	defer func(file *os.File) {
+		err = file.Close()
 		if err != nil {
-			log.Fatalln(err)
+			log.Panicln(err)
 		}
 	}(output)
 

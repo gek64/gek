@@ -2,6 +2,7 @@ package gek_file
 
 import (
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -12,15 +13,16 @@ func CreateFile(filePath string, content string) (file *os.File, err error) {
 		return nil, err
 	}
 
-	// write to the file
-	text := []byte(content)
-	_, err = file.Write(text)
-	if err != nil {
-		return nil, err
-	}
-
 	// Close the file
-	err = file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Panicln(err)
+		}
+	}(file)
+
+	// write to the file
+	_, err = file.WriteString(content)
 	if err != nil {
 		return nil, err
 	}
