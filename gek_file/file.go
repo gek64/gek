@@ -32,59 +32,44 @@ func CreateFile(filePath string, content string) (file *os.File, err error) {
 
 func CreateDir(dirPath string) (err error) {
 	// Create temp dir
-	err = os.MkdirAll(dirPath, 751)
-	if err != nil {
-		return err
-	}
-	return nil
+	err = os.MkdirAll(dirPath, 755)
+	return err
 }
 
-func CreateRandomFile(dir string, pattern string, content string) (tmpFile *os.File, err error) {
+func CreateRandomFile(dir string, pattern string, content string) (f *os.File, err error) {
 	// Create temp file
-	tmpFile, err = ioutil.TempFile(dir, pattern)
+	f, err = ioutil.TempFile(dir, pattern)
 	if err != nil {
 		return nil, err
 	}
 
-	// Remember to clean up the file afterwards
-	// defer os.Remove(tmpFile.Name())
+	defer func(tmpFile *os.File) {
+		err = tmpFile.Close()
+		if err != nil {
+			log.Panicln(err)
+		}
+	}(f)
 
 	// write to the file
-	_, err = tmpFile.WriteString(content)
+	_, err = f.WriteString(content)
 	if err != nil {
 		return nil, err
 	}
 
-	// Close the file
-	err = tmpFile.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return tmpFile, nil
+	return f, nil
 }
 
-func CreateRandomDir(dir string, pattern string) (tmpDir string, err error) {
+func CreateRandomDir(dir string, pattern string) (name string, err error) {
 	// Create temp dir
-	tmpDir, err = ioutil.TempDir(dir, pattern)
+	name, err = ioutil.TempDir(dir, pattern)
 	if err != nil {
 		return "", err
 	}
 
-	// Remember to clean up the file afterwards
-	// defer os.RemoveAll(tmpDir)
-
-	return tmpDir, nil
+	return name, nil
 }
 
-func Exist(filePath string) (exist bool, isDir bool, err error) {
-	exist = false
-	isDir = false
-
+func Exist(filePath string) (exist bool, isDir bool) {
 	fileInfo, err := os.Stat(filePath)
-	if err != nil {
-		return false, false, err
-	}
-
-	return true, fileInfo.IsDir(), nil
+	return os.IsExist(err), fileInfo.IsDir()
 }

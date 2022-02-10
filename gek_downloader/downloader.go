@@ -3,7 +3,6 @@ package gek_downloader
 import (
 	"fmt"
 	"gek_exec"
-	"gek_file"
 	"gek_math"
 	"io"
 	"log"
@@ -124,8 +123,8 @@ func InternalDownloaderFilePath(url string, outputFile string) (err error) {
 	}(response.Body)
 
 	// 如果默认文件已存在,则删除已存在文件
-	exist, _, _ := gek_file.Exist(outputFile)
-	if exist {
+	_, err = os.Stat(outputFile)
+	if os.IsExist(err) {
 		err = os.RemoveAll(outputFile)
 		if err != nil {
 			return err
