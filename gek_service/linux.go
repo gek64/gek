@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gek_exec"
 	"os"
+	"os/exec"
 )
 
 var (
@@ -19,13 +20,13 @@ func Load(serviceName string) (err error) {
 	}
 
 	// 启动服务
-	err = gek_exec.Run("systemctl start " + serviceName)
+	err = gek_exec.Run(exec.Command("systemctl", "start", serviceName))
 	if err != nil {
 		return err
 	}
 
 	// 开启服务自启
-	err = gek_exec.Run("systemctl enable " + serviceName)
+	err = gek_exec.Run(exec.Command("systemctl", "enable", serviceName))
 	if err != nil {
 		return err
 	}
@@ -36,13 +37,13 @@ func Load(serviceName string) (err error) {
 // Unload 关闭服务自启+停止服务
 func Unload(serviceName string) (err error) {
 	// 停止服务
-	err = gek_exec.Run("systemctl stop " + serviceName)
+	err = gek_exec.Run(exec.Command("systemctl", "stop", serviceName))
 	if err != nil {
 		return err
 	}
 
 	// 关闭服务自启
-	err = gek_exec.Run("systemctl disable " + serviceName)
+	err = gek_exec.Run(exec.Command("systemctl", "disable", serviceName))
 	if err != nil {
 		return err
 	}
@@ -65,7 +66,7 @@ func Reload(serviceName string) (err error) {
 	}
 
 	// 重启服务
-	err = gek_exec.Run("systemctl restart " + serviceName)
+	err = gek_exec.Run(exec.Command("systemctl", "restart", serviceName))
 	if err != nil {
 		return err
 	}
@@ -77,7 +78,7 @@ func Reload(serviceName string) (err error) {
 // Code 代表含义查询 https://www.freedesktop.org/software/systemd/man/systemctl.html#Exit%20status
 func Status(serviceName string) (returnCode error) {
 	// 查看服务状态
-	return gek_exec.Run("systemctl status " + serviceName + " --no-pager")
+	return gek_exec.Run(exec.Command("systemctl", "status", serviceName, "--no-pager"))
 }
 
 // Uninstall 卸载服务
