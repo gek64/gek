@@ -6,28 +6,28 @@ import (
 	"os"
 )
 
-func CreateFile(filePath string, content string) (file *os.File, err error) {
-	// Create temp file
-	file, err = os.Create(filePath)
+func CreateFile(filePath string, content string) (name string, err error) {
+	// Create temp f
+	f, err := os.Create(filePath)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	// Close the file
+	// Close the f
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
 			log.Panicln(err)
 		}
-	}(file)
+	}(f)
 
-	// write to the file
-	_, err = file.WriteString(content)
+	// write to the f
+	_, err = f.WriteString(content)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return file, nil
+	return f.Name(), nil
 }
 
 func CreateDir(dirPath string) (err error) {
@@ -36,11 +36,11 @@ func CreateDir(dirPath string) (err error) {
 	return err
 }
 
-func CreateRandomFile(dir string, pattern string, content string) (f *os.File, err error) {
+func CreateRandomFile(dir string, pattern string, content string) (name string, err error) {
 	// Create temp file
-	f, err = ioutil.TempFile(dir, pattern)
+	f, err := ioutil.TempFile(dir, pattern)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	defer func(tmpFile *os.File) {
@@ -53,10 +53,10 @@ func CreateRandomFile(dir string, pattern string, content string) (f *os.File, e
 	// write to the file
 	_, err = f.WriteString(content)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return f, nil
+	return f.Name(), nil
 }
 
 func CreateRandomDir(dir string, pattern string) (name string, err error) {

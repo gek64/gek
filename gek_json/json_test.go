@@ -25,7 +25,7 @@ func ExampleJsoner_ReadFromFile() {
 		if err != nil {
 			log.Fatal(err)
 		}
-	}(f.Name())
+	}(f)
 
 	// 新建结构体实例
 	tj := new(testJson)
@@ -36,7 +36,7 @@ func ExampleJsoner_ReadFromFile() {
 		log.Fatal(err)
 	}
 
-	err = jsoner.ReadFromFile(f.Name())
+	err = jsoner.ReadFromFile(f)
 	if err != nil {
 		log.Fatal(err)
 	}

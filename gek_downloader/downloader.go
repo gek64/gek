@@ -158,7 +158,7 @@ func InternalDownloaderFilePath(url string, outputFile string) (err error) {
 func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 	var downloader string = ""
 	// 循环找到是否存在外部下载器
-	externalDownloaders := []string{"aria2c", "wget", "curl"}
+	externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
 	for _, d := range externalDownloaders {
 		exist, _, _ := gek_exec.Exist(d)
 		if exist {
@@ -183,8 +183,38 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 		if err != nil {
 			return err
 		}
+	case "fetch":
+		// 获取原始工作路径,退出时恢复到到原始工作路径
+		origin, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		defer func(dir string) {
+			err := os.Chdir(dir)
+			if err != nil {
+				log.Panicln(err)
+			}
+		}(origin)
+		// 输出文件夹不存在则创建
+		_, err = os.Stat(outputFolder)
+		if os.IsNotExist(err) {
+			err = os.MkdirAll(outputFolder, 755)
+			if err != nil {
+				return err
+			}
+		}
+		// 跳转到输出文件夹
+		err = os.Chdir(outputFolder)
+		if err != nil {
+			return err
+		}
+		// 下载文件
+		err = gek_exec.Run(exec.Command("fetch", url))
+		if err != nil {
+			return err
+		}
 	default:
-		return fmt.Errorf("can not find aria2c, wget and curl")
+		return fmt.Errorf("can not find aria2c, wget, curl and fetch")
 	}
 
 	return nil
@@ -194,7 +224,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 func ExternalDownloaderWithFilePath(url string, outputFile string) (err error) {
 	var downloader string = ""
 	// 循环找到是否存在外部下载器
-	externalDownloaders := []string{"aria2c", "wget", "curl"}
+	externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
 	for _, d := range externalDownloaders {
 		exist, _, _ := gek_exec.Exist(d)
 		if exist {
@@ -220,8 +250,13 @@ func ExternalDownloaderWithFilePath(url string, outputFile string) (err error) {
 		if err != nil {
 			return err
 		}
+	case "fetch":
+		err = gek_exec.Run(exec.Command("fetch", url, "-o", outputFile))
+		if err != nil {
+			return err
+		}
 	default:
-		return fmt.Errorf("can not find aria2c, wget and curl")
+		return fmt.Errorf("can not find aria2c, wget, curl and fetch")
 	}
 	return nil
 }
