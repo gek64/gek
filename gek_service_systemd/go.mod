@@ -1,4 +1,4 @@
-module gek_service
+module gek_service_systemd
 
 require (
 	gek_exec v0.0.0

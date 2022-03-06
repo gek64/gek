@@ -1,4 +1,4 @@
-package gek_service_freebsd
+package gek_service_rc
 
 import (
 	"fmt"

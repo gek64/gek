@@ -1,8 +1,8 @@
 package gek_app
 
 import (
-	"gek_service"
-	"gek_service_freebsd"
+	"gek_service_rc"
+	"gek_service_systemd"
 	"os"
 	"runtime"
 )
@@ -31,7 +31,7 @@ func (s Service) Install() (err error) {
 	// 分系统运行不同的命令
 	switch runtime.GOOS {
 	case SupportedOS[0]:
-		service := gek_service.NewService(s.Name, s.Content)
+		service := gek_service_systemd.NewService(s.Name, s.Content)
 		// 安装服务
 		err = service.Install()
 		if err != nil {
@@ -63,7 +63,7 @@ func (s Service) Uninstall() (err error) {
 	// 分系统运行不同的命令
 	switch runtime.GOOS {
 	case SupportedOS[0]:
-		service := gek_service.NewService(s.Name, s.Content)
+		service := gek_service_systemd.NewService(s.Name, s.Content)
 		// 卸载服务
 		err = service.Uninstall()
 		if err != nil {
@@ -85,7 +85,7 @@ func (s Service) Restart() (err error) {
 	// 分系统运行不同的命令
 	switch runtime.GOOS {
 	case SupportedOS[0]:
-		service := gek_service.NewService(s.Name, s.Content)
+		service := gek_service_systemd.NewService(s.Name, s.Content)
 		// 重载服务
 		err = service.Reload()
 		if err != nil {

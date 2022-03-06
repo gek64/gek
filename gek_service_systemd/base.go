@@ -1,4 +1,4 @@
-package gek_service
+package gek_service_systemd
 
 import (
 	"fmt"

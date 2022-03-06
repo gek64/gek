@@ -1,4 +1,4 @@
-module gek_service_freebsd
+module gek_service_rc
 
 require (
 	gek_exec v0.0.0

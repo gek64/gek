@@ -1,10 +1,9 @@
-package gek_service_freebsd
+package gek_service_systemd
 
 import (
 	"fmt"
 	"gek_file"
 	"os"
-	"path/filepath"
 )
 
 type Service struct {
@@ -30,19 +29,12 @@ func (s *Service) Install() (err error) {
 	}
 
 	// 检查服务文件是否存在
-	_, err = os.Stat(filepath.Join(ServiceLocation, s.Name))
+	_, err = os.Stat(ServiceLocation + s.Name)
 	if os.IsExist(err) {
 		return fmt.Errorf("gek_service %s is already installed", s.Name)
 	}
 
-	// 创建服务文件
-	_, err = gek_file.CreateFile(filepath.Join(ServiceLocation, s.Name), s.Content)
-	if err != nil {
-		return err
-	}
-
-	// 服务文件赋权755
-	err = os.Chmod(filepath.Join(ServiceLocation, s.Name), 0755)
+	_, err = gek_file.CreateFile(ServiceLocation+s.Name, s.Content)
 	if err != nil {
 		return err
 	}
@@ -74,7 +66,8 @@ func (s *Service) Reload() (err error) {
 	return Reload(s.Name)
 }
 
-// Status 查看服务状态
-func (s *Service) Status() (err error) {
+// Status 查看服务状态,返回错误信息为错误的Code 或者 nil
+// Code 代表含义查询 https://www.freedesktop.org/software/systemd/man/systemctl.html#Exit%20status
+func (s *Service) Status() (returnCode error) {
 	return Status(s.Name)
 }
