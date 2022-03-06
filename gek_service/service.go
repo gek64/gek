@@ -22,7 +22,7 @@ func (s *Service) Install() (err error) {
 	// 检查服务文件夹是否存在
 	_, err = os.Stat(ServiceLocation)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(ServiceLocation, 755)
+		err = os.MkdirAll(ServiceLocation, 0755)
 		if err != nil {
 			return err
 		}

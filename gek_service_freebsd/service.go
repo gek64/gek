@@ -23,7 +23,7 @@ func (s *Service) Install() (err error) {
 	// 检查服务文件夹是否存在
 	_, err = os.Stat(ServiceLocation)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(ServiceLocation, 755)
+		err = os.MkdirAll(ServiceLocation, 0755)
 		if err != nil {
 			return err
 		}
@@ -42,7 +42,7 @@ func (s *Service) Install() (err error) {
 	}
 
 	// 服务文件赋权755
-	err = os.Chmod(filepath.Join(ServiceLocation, s.Name), 755)
+	err = os.Chmod(filepath.Join(ServiceLocation, s.Name), 0755)
 	if err != nil {
 		return err
 	}

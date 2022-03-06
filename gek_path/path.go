@@ -14,7 +14,7 @@ import (
 // Mkdir Create path if the path not exists
 func Mkdir(path string) bool {
 	if !Exist(path) {
-		err := os.MkdirAll(path, 700)
+		err := os.MkdirAll(path, 0755)
 		log.Println(err)
 		return true
 	}

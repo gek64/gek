@@ -32,7 +32,7 @@ func CreateFile(filePath string, content string) (name string, err error) {
 
 func CreateDir(dirPath string) (err error) {
 	// Create temp dir
-	err = os.MkdirAll(dirPath, 755)
+	err = os.MkdirAll(dirPath, 0755)
 	return err
 }
 

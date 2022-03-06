@@ -198,7 +198,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 		// 输出文件夹不存在则创建
 		_, err = os.Stat(outputFolder)
 		if os.IsNotExist(err) {
-			err = os.MkdirAll(outputFolder, 755)
+			err = os.MkdirAll(outputFolder, 0755)
 			if err != nil {
 				return err
 			}
