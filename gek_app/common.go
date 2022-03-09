@@ -1,7 +1,6 @@
 package gek_app
 
 import (
-	"gek_downloader"
 	"gek_exec"
 	"os"
 	"os/exec"
@@ -14,32 +13,8 @@ var (
 	SupportedArch = []string{"amd64", "386", "arm64", "arm", "riscv64", "mips64", "mips64le", "mips", "mipsle", "ppc64", "ppc64le", "s390x", "wasm"}
 )
 
-// Download 下载应用到临时目录
-func Download(downloadLink, location string) (err error) {
-	// 建立下载文件夹
-	// 已经存在就删除重建
-	_, err = os.Stat(location)
-	if os.IsExist(err) {
-		err = os.RemoveAll(location)
-		if err != nil {
-			return err
-		}
-	}
-	err = os.MkdirAll(location, 0755)
-	if err != nil {
-		return err
-	}
-
-	// 下载文件到文件夹
-	err = gek_downloader.Downloader(downloadLink, location, "")
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Extract 从压缩文件中按照给定的的文件列表解压需要的文件到输出路径
-func Extract(archiveFile string, fileList []string, location string) (err error) {
+// ExtractZip 压缩zip文件
+func ExtractZip(archiveFile string, location string) (err error) {
 	// 如果输出路径不存在则创建
 	_, err = os.Stat(location)
 	if os.IsNotExist(err) {
@@ -48,14 +23,39 @@ func Extract(archiveFile string, fileList []string, location string) (err error)
 			return err
 		}
 	}
-	// 循环解压
-	for _, file := range fileList {
-		err = gek_exec.Run(exec.Command("unzip", "-o", archiveFile, file, "-d", location))
+
+	// unzip 解压
+	err = gek_exec.Run(exec.Command("unzip", "-o", "-d", location, archiveFile))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ExtractTar 压缩tar文件
+func ExtractTar(archiveFile string, location string) (err error) {
+	// 如果输出路径不存在则创建
+	_, err = os.Stat(location)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(location, 0755)
 		if err != nil {
 			return err
 		}
 	}
+
+	// tar 解压
+	err = gek_exec.Run(exec.Command("tar", "-x", archiveFile, "-C", location))
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+// CopyFiles 复制文件与文件夹
+func CopyFiles(source string, target string) (err error) {
+	return gek_exec.Run(exec.Command("cp", "-R", "-f", source, target))
 }
 
 // ChmodList 给列表中的路径赋权

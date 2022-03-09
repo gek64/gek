@@ -43,7 +43,7 @@ func (s Service) Install() (err error) {
 			return err
 		}
 	case SupportedOS[1]:
-		service := gek_service_freebsd.NewService(s.Name, s.Content)
+		service := gek_service_rc.NewService(s.Name, s.Content)
 		// 安装服务
 		err = service.Install()
 		if err != nil {
@@ -70,7 +70,7 @@ func (s Service) Uninstall() (err error) {
 			return err
 		}
 	case SupportedOS[1]:
-		service := gek_service_freebsd.NewService(s.Name, s.Content)
+		service := gek_service_rc.NewService(s.Name, s.Content)
 		// 卸载服务
 		err = service.Uninstall()
 		if err != nil {
@@ -97,7 +97,7 @@ func (s Service) Restart() (err error) {
 			return err
 		}
 	case SupportedOS[1]:
-		service := gek_service_freebsd.NewService(s.Name, s.Content)
+		service := gek_service_rc.NewService(s.Name, s.Content)
 		// 重载服务
 		err = service.Reload()
 		if err != nil {
