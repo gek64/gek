@@ -60,7 +60,7 @@ func (c Config) Uninstall() (err error) {
 	// 检测配置安装路径是否存在
 	_, err = os.Stat(c.Location)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("can'appTemp find config location %s", c.Location)
+		return fmt.Errorf("can't find config location %s", c.Location)
 	}
 
 	if c.UninstallDeleteLocationFolder {

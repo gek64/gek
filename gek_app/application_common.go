@@ -61,11 +61,23 @@ func (a Application) extract(tempLocation string) (err error) {
 
 // 复制文件
 func (a Application) copy(tempLocation string) (err error) {
+
+	fileInfos, err := ioutil.ReadDir(tempLocation)
+	if err != nil {
+		return err
+	}
+
 	for _, appFile := range a.AppFiles {
-		err = CopyFiles(filepath.Join(tempLocation, appFile), filepath.Join(a.Location, appFile))
-		if err != nil {
-			return err
+		for _, file := range fileInfos {
+			if strings.Contains(file.Name(), appFile) {
+				err = CopyFiles(filepath.Join(tempLocation, file.Name()), filepath.Join(a.Location, appFile))
+				if err != nil {
+					return err
+				}
+				break
+			}
 		}
+
 	}
 	return nil
 }

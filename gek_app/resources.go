@@ -58,7 +58,7 @@ func (r Resources) Uninstall() (err error) {
 	// 检测资源安装路径是否存在
 	_, err = os.Stat(r.Location)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("can'appTemp find resources location %s", r.Location)
+		return fmt.Errorf("can't find resources location %s", r.Location)
 	}
 
 	if r.UninstallDeleteLocationFolder {

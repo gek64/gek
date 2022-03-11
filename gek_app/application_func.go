@@ -85,7 +85,7 @@ func (a Application) Uninstall() (err error) {
 	// 检测应用安装情况
 	_, err = os.Stat(filepath.Join(a.Location, a.AppFiles[0]))
 	if os.IsNotExist(err) {
-		return fmt.Errorf("can'appTemp find app location %s", filepath.Join(a.Location, a.AppFiles[0]))
+		return fmt.Errorf("can't find app location %s", filepath.Join(a.Location, a.AppFiles[0]))
 	}
 	// 删除应用文件或者应用文件夹
 	if a.UninstallDeleteLocationFolder {
