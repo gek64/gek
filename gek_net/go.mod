@@ -1,1 +1,3 @@
-module "gek_net"
+module gek_net
+
+go 1.18
