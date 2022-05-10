@@ -26,12 +26,13 @@ func (a Application) Install(tempLocation string, needDownload bool, needExtract
 	if err != nil {
 		return err
 	}
-	defer func(a Application) {
-		err = appTemp.Delete()
+	defer func(appTemp Temp) {
+		err := appTemp.Delete()
 		if err != nil {
 			log.Panicln(err)
 		}
-	}(a)
+	}(appTemp)
+
 	// 下载文件
 	if needDownload {
 		err = gek_downloader.Downloader(a.Url, appTemp.Location, "")
