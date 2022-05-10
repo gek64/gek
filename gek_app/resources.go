@@ -3,8 +3,10 @@ package gek_app
 import (
 	"fmt"
 	"gek_downloader"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type Resources struct {
@@ -23,8 +25,8 @@ func NewResources(files []string, urls []string, location string, uninstallDelet
 	return Resources{Files: files, Urls: urls, Location: location, UninstallDeleteLocationFolder: uninstallDeleteLocationFolder}
 }
 
-// Install 安装资源
-func (r Resources) Install() (err error) {
+// InstallFromInternet 从网络安装资源
+func (r Resources) InstallFromInternet() (err error) {
 	// 检测资源安装路径是否存在
 	// 不存在则创建
 	_, err = os.Stat(r.Location)
@@ -45,6 +47,53 @@ func (r Resources) Install() (err error) {
 	// 赋权644
 	for _, file := range r.Files {
 		err = os.Chmod(filepath.Join(r.Location, file), 0644)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// InstallFromLocation 从本地目录安装资源
+func (r Resources) InstallFromLocation(localLocation string) (err error) {
+	// 检查本地路径是否存在
+	_, err = os.Stat(localLocation)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%s is not exist", localLocation)
+	}
+
+	// 检测资源安装路径是否存在
+	// 不存在则创建
+	_, err = os.Stat(r.Location)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(r.Location, 0755)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 拷贝文件夹中资源文件到安装文件夹
+	fileInfos, err := ioutil.ReadDir(localLocation)
+	if err != nil {
+		return err
+	}
+
+	for _, rFile := range r.Files {
+		for _, file := range fileInfos {
+			if strings.Contains(file.Name(), rFile) {
+				err = CopyFiles(filepath.Join(localLocation, file.Name()), filepath.Join(r.Location, rFile))
+				if err != nil {
+					return err
+				}
+				break
+			}
+		}
+	}
+
+	// 赋权0644
+	for _, rFile := range r.Files {
+		err = os.Chmod(filepath.Join(r.Location, rFile), 0644)
 		if err != nil {
 			return err
 		}
