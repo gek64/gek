@@ -4,33 +4,34 @@ import (
 	"container/list"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 )
 
-// Mkdir Create path if the path not exists
-func Mkdir(path string) bool {
-	if !Exist(path) {
-		err := os.MkdirAll(path, 0755)
-		log.Println(err)
-		return true
-	}
-	return false
+// Mkdir Create path
+func Mkdir(path string) error {
+	return os.Mkdir(path, 0755)
 }
 
-// Exist Check if path string exists
-func Exist(path string) bool {
-	var _, err = os.Stat(path)
-	if err == nil {
-		return true
-	}
+// MkdirAll Create all path
+func MkdirAll(path string) error {
+	return os.MkdirAll(path, 0755)
+}
+
+// Stat Check if path string stats
+func Stat(path string) (os.FileInfo, error) {
+	return os.Stat(path)
+}
+
+// Exist Check if path string exist? and is a folder?
+func Exist(path string) (exist bool, isFolder bool) {
+	fileInfo, err := Stat(path)
 	if os.IsNotExist(err) {
-		return false
+		return false, false
 	}
-	return false
+	return true, fileInfo.IsDir()
 }
 
 // WildcardToRegex 通配符 * ? 转换为正则表达式
