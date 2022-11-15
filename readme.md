@@ -11,7 +11,7 @@
 
 ## Install
 ```shell
-go get -u github.com/gek64/gek
+go get -u github.com/gek64/gek@main
 ```
 
 ## go doc
