@@ -2,7 +2,7 @@ package gApp
 
 import (
 	"fmt"
-	"gek/gFile"
+	"github.com/gek64/gek/gFile"
 	"os"
 	"path/filepath"
 )

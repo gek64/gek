@@ -1,7 +1,7 @@
 package gApp
 
 import (
-	"gek/gGithub"
+	"github.com/gek64/gek/gGithub"
 	"os"
 	"path/filepath"
 	"strings"

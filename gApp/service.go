@@ -1,8 +1,8 @@
 package gApp
 
 import (
-	"gek/gService/rc"
-	"gek/gService/systemd"
+	"github.com/gek64/gek/gService/rc"
+	"github.com/gek64/gek/gService/systemd"
 	"os"
 	"runtime"
 )

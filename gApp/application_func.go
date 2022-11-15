@@ -2,7 +2,7 @@ package gApp
 
 import (
 	"fmt"
-	"gek/gDownloader"
+	"github.com/gek64/gek/gDownloader"
 	"log"
 	"os"
 	"path/filepath"

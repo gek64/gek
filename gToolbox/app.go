@@ -2,7 +2,7 @@ package gToolbox
 
 import (
 	"fmt"
-	"gek/gExec"
+	"github.com/gek64/gek/gExec"
 	"os"
 )
 

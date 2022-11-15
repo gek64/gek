@@ -2,7 +2,7 @@ package gGithub
 
 import (
 	"fmt"
-	"gek/gJson"
+	"github.com/gek64/gek/gJson"
 	"strings"
 )
 

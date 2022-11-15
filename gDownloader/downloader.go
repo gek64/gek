@@ -2,8 +2,8 @@ package gDownloader
 
 import (
 	"fmt"
-	"gek/gExec"
-	"gek/gMath"
+	"github.com/gek64/gek/gExec"
+	"github.com/gek64/gek/gMath"
 	"io"
 	"log"
 	"net/http"

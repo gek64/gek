@@ -2,7 +2,7 @@ package gJson
 
 import (
 	"fmt"
-	"gek/gFile"
+	"github.com/gek64/gek/gFile"
 	"log"
 	"os"
 )

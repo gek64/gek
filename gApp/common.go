@@ -1,7 +1,7 @@
 package gApp
 
 import (
-	"gek/gExec"
+	"github.com/gek64/gek/gExec"
 	"os"
 	"os/exec"
 )
