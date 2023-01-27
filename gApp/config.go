@@ -38,7 +38,7 @@ func (c Config) Install() (err error) {
 	// 不存在则创建
 	_, err = os.Stat(c.Location)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(c.Location, 00755)
+		err = os.MkdirAll(c.Location, 0755)
 		if err != nil {
 			return err
 		}
