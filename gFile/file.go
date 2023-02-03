@@ -20,7 +20,7 @@ func CreateRawFile(filePath string, content []byte) (name string, err error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-			log.Panicln(err)
+			log.Println(err)
 		}
 	}(f)
 
@@ -50,10 +50,11 @@ func CreateRandomRawFile(dir string, pattern string, content []byte) (name strin
 		return "", err
 	}
 
+	// Close the file
 	defer func(tmpFile *os.File) {
 		err = tmpFile.Close()
 		if err != nil {
-			log.Panicln(err)
+			log.Println(err)
 		}
 	}(f)
 
