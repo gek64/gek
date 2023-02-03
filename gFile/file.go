@@ -6,13 +6,17 @@ import (
 )
 
 func CreateFile(filePath string, content string) (name string, err error) {
-	// Create temp f
+	return CreateRawFile(filePath, []byte(content))
+}
+
+func CreateRawFile(filePath string, content []byte) (name string, err error) {
+	// Create file
 	f, err := os.Create(filePath)
 	if err != nil {
 		return "", err
 	}
 
-	// Close the f
+	// Close the file
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
@@ -20,8 +24,8 @@ func CreateFile(filePath string, content string) (name string, err error) {
 		}
 	}(f)
 
-	// write to the f
-	_, err = f.WriteString(content)
+	// write to the file
+	_, err = f.Write(content)
 	if err != nil {
 		return "", err
 	}
@@ -36,6 +40,10 @@ func CreateDir(dirPath string) (err error) {
 }
 
 func CreateRandomFile(dir string, pattern string, content string) (name string, err error) {
+	return CreateRandomRawFile(dir, pattern, []byte(content))
+}
+
+func CreateRandomRawFile(dir string, pattern string, content []byte) (name string, err error) {
 	// Create temp file
 	f, err := os.CreateTemp(dir, pattern)
 	if err != nil {
@@ -50,7 +58,7 @@ func CreateRandomFile(dir string, pattern string, content string) (name string, 
 	}(f)
 
 	// write to the file
-	_, err = f.WriteString(content)
+	_, err = f.Write(content)
 	if err != nil {
 		return "", err
 	}
