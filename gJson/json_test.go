@@ -30,7 +30,7 @@ func ExampleJsoner_ReadFromFile() {
 	tj := new(testJson)
 
 	// 使用json处理体读取json文件到结构体实例中
-	jsoner, err := NewJsoner(tj)
+	jsoner, err := NewJsonOperator(tj)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func ExampleJsoner_WriteToFile() {
 		Age:  24,
 	}
 
-	jsoner, err := NewJsoner(&tj)
+	jsoner, err := NewJsonOperator(&tj)
 	if err != nil {
 		log.Fatal(err)
 	}

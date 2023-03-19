@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// GithubAPI Github 下载 API
-type GithubAPI struct {
+// API Github 下载 API
+type API struct {
 	TagName    string   `json:"tag_name"`
 	Assets     []Assets `json:"assets"`
 	TarballURL string   `json:"tarball_url"`
@@ -20,28 +20,25 @@ type Assets struct {
 	BrowserDownloadURL string `json:"browser_download_url"`
 }
 
-// NewGithubAPI 新建 GithubAPI
-func NewGithubAPI(repo string) (githubAPI *GithubAPI, err error) {
-
-	githubAPI = new(GithubAPI)
-
+// NewAPI 新建 API
+func NewAPI(repo string) (api *API, err error) {
 	// 新建json处理体
-	jsoner, err := gJson.NewJsoner(&githubAPI)
+	jsonOperator, err := gJson.NewJsonOperator(api)
 	if err != nil {
 		return nil, err
 	}
 
 	// json处理体从URL中读取json数据,数据存储到githubAPI中
-	err = jsoner.ReadFromURL("https://api.github.com/repos/" + repo + "/releases/latest")
+	err = jsonOperator.ReadFromURL("https://api.github.com/repos/" + repo + "/releases/latest")
 	if err != nil {
 		return nil, err
 	}
 
-	return githubAPI, nil
+	return api, nil
 }
 
-// SearchRelease 搜索 GithubAPI 中 Assets 中的名称,返回第一个匹配的下载链接
-func (api GithubAPI) SearchRelease(part string) (downloadUrl string, err error) {
+// SearchRelease 搜索 API 中 Assets 中的名称,返回第一个匹配的下载链接
+func (api API) SearchRelease(part string) (downloadUrl string, err error) {
 	for _, asset := range api.Assets {
 		if strings.Contains(asset.Name, part) {
 			return asset.BrowserDownloadURL, nil
@@ -50,8 +47,8 @@ func (api GithubAPI) SearchRelease(part string) (downloadUrl string, err error) 
 	return "", fmt.Errorf("can not find release with part %s", part)
 }
 
-// SearchPartsInRelease 搜索 GithubAPI 中 Assets 中的多个名称,返回第一个匹配的下载链接
-func (api GithubAPI) SearchPartsInRelease(parts []string) (downloadUrl string, err error) {
+// SearchPartsInRelease 搜索 API 中 Assets 中的多个名称,返回第一个匹配的下载链接
+func (api API) SearchPartsInRelease(parts []string) (downloadUrl string, err error) {
 
 	for _, asset := range api.Assets {
 		var matched bool = true

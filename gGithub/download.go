@@ -21,7 +21,7 @@ func GetDownloadLink(repo string, appMap map[string]string) (downloadLink string
 	keyPair := ""
 
 	// 获取Github API
-	githubAPI, err := NewGithubAPI(repo)
+	githubAPI, err := NewAPI(repo)
 	if err != nil {
 		return "", err
 	}
