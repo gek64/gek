@@ -49,7 +49,7 @@ func (j *JsonOperator) ReadFromURL(url string) error {
 		return err
 	}
 	// 将response中的json数据解析，然后写入处理体
-	err = json.NewDecoder(response.Body).Decode(&j.jsonStructPointer)
+	err = json.NewDecoder(response.Body).Decode(j.jsonStructPointer)
 	if err != nil {
 		return err
 	}

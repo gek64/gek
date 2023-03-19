@@ -23,7 +23,7 @@ type Assets struct {
 // NewAPI 新建 API
 func NewAPI(repo string) (api *API, err error) {
 	// 新建json处理体
-	jsonOperator, err := gJson.NewJsonOperator(api)
+	jsonOperator, err := gJson.NewJsonOperator(&api)
 	if err != nil {
 		return nil, err
 	}

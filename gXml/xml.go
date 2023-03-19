@@ -1,7 +1,6 @@
 package gXml
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"net/http"
@@ -29,7 +28,7 @@ func (x *XmlOperator) ReadFromFile(filename string) error {
 	// 打开文件
 	file, err := os.Open(filename)
 	// xml数据解析后,写入结构体
-	err = xml.NewDecoder(file).Decode(&x.xmlStructPointer)
+	err = xml.NewDecoder(file).Decode(x.xmlStructPointer)
 	if err != nil {
 		return err
 	}
@@ -44,7 +43,7 @@ func (x *XmlOperator) ReadFromURL(url string) error {
 		return err
 	}
 	// 将response中的xml数据解析，然后写入处理体
-	err = json.NewDecoder(response.Body).Decode(&x.xmlStructPointer)
+	err = xml.NewDecoder(response.Body).Decode(x.xmlStructPointer)
 	if err != nil {
 		return err
 	}

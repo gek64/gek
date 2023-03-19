@@ -26,11 +26,10 @@ type Item struct {
 // NewAPI 新建 API
 func NewAPI(rssUrl string) (api *API, err error) {
 	// 新建xml处理体
-	xmlOperator, err := gXml.NewXmlOperator(api)
+	xmlOperator, err := gXml.NewXmlOperator(&api)
 	if err != nil {
 		return nil, err
 	}
-
 	// xml处理体从URL中读取xml数据,数据存储到api中
 	err = xmlOperator.ReadFromURL(rssUrl)
 	if err != nil {
