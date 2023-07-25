@@ -1,4 +1,4 @@
-package systemd
+package rcd
 
 import (
     "fmt"
@@ -8,25 +8,19 @@ import (
 )
 
 var (
-    ServiceLocation = "/etc/systemd/system/"
+    ServiceLocation = "/usr/local/etc/rc.d/"
 )
 
 // Load 开启服务自启+启动服务
 func Load(serviceName string) (err error) {
-    // 重载所有服务
-    err = gExec.Run("systemctl daemon-reload")
+    // 开启服务自启
+    err = gExec.Run(exec.Command("service", serviceName, "enable"))
     if err != nil {
         return err
     }
 
     // 启动服务
-    err = gExec.Run(exec.Command("systemctl", "start", serviceName))
-    if err != nil {
-        return err
-    }
-
-    // 开启服务自启
-    err = gExec.Run(exec.Command("systemctl", "enable", serviceName))
+    err = gExec.Run(exec.Command("service", serviceName, "start"))
     if err != nil {
         return err
     }
@@ -37,19 +31,13 @@ func Load(serviceName string) (err error) {
 // Unload 关闭服务自启+停止服务
 func Unload(serviceName string) (err error) {
     // 停止服务
-    err = gExec.Run(exec.Command("systemctl", "stop", serviceName))
+    err = gExec.Run(exec.Command("service", serviceName, "stop"))
     if err != nil {
         return err
     }
 
     // 关闭服务自启
-    err = gExec.Run(exec.Command("systemctl", "disable", serviceName))
-    if err != nil {
-        return err
-    }
-
-    // 重载所有服务
-    err = gExec.Run("systemctl daemon-reload")
+    err = gExec.Run(exec.Command("service", serviceName, "delete"))
     if err != nil {
         return err
     }
@@ -59,14 +47,8 @@ func Unload(serviceName string) (err error) {
 
 // Reload 重载服务
 func Reload(serviceName string) (err error) {
-    // 重载所有服务
-    err = gExec.Run("systemctl daemon-reload")
-    if err != nil {
-        return err
-    }
-
     // 重启服务
-    err = gExec.Run(exec.Command("systemctl", "restart", serviceName))
+    err = gExec.Run(exec.Command("service", serviceName, "restart"))
     if err != nil {
         return err
     }
@@ -74,11 +56,15 @@ func Reload(serviceName string) (err error) {
     return nil
 }
 
-// Status 查看服务状态,返回错误信息为错误的Code 或者 nil
-// Code 代表含义查询 https://www.freedesktop.org/software/systemd/man/systemctl.html#Exit%20status
-func Status(serviceName string) (returnCode error) {
+// Status 查看服务状态
+func Status(serviceName string) (err error) {
     // 查看服务状态
-    return gExec.Run(exec.Command("systemctl", "status", serviceName, "--no-pager"))
+    err = gExec.Run(exec.Command("service", serviceName, "status"))
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 // Uninstall 卸载服务
