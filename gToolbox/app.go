@@ -12,8 +12,8 @@ func CheckToolbox(toolbox []string) error {
 
     // 检查工具链,如果有不存在的会写入message
     for _, tool := range toolbox {
-        exist, _, _ := gExec.Exist(tool)
-        if !exist {
+        _, err := gExec.Exist(tool)
+        if err != nil {
             message = message + " " + tool
         }
     }

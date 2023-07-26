@@ -9,11 +9,11 @@ import (
 )
 
 // Exist 检查指定程序是否存在于环境变量或者可执行文件的同一目录中
-func Exist(program string) (exist bool, path string, err error) {
+func Exist(program string) (path string, err error) {
     // 获取当前运行的可执行文件的目录
     exd, err := FindLocation()
     if err != nil {
-        return false, "", err
+        return "", err
     }
     // 当前运行的可执行文件的目录是否存在program
     exp := filepath.Join(exd, program)
@@ -23,10 +23,10 @@ func Exist(program string) (exist bool, path string, err error) {
         path, err = exec.LookPath(program)
         //当拼接路径及环境路径中均找不到program时返回false 空字符串 错误
         if err != nil {
-            return false, "", err
+            return "", err
         }
     }
-    return true, path, nil
+    return path, nil
 }
 
 // FindLocation 返回当前运行的可执行文件的地址

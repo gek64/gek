@@ -160,8 +160,8 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
     // 循环找到是否存在外部下载器
     externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
     for _, d := range externalDownloaders {
-        exist, _, _ := gExec.Exist(d)
-        if exist {
+        _, err = gExec.Exist(d)
+        if err == nil {
             downloader = d
             break
         }
@@ -226,8 +226,8 @@ func ExternalDownloaderWithFilePath(url string, outputFile string) (err error) {
     // 循环找到是否存在外部下载器
     externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
     for _, d := range externalDownloaders {
-        exist, _, _ := gExec.Exist(d)
-        if exist {
+        _, err = gExec.Exist(d)
+        if err == nil {
             downloader = d
             break
         }
