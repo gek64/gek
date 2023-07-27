@@ -9,8 +9,16 @@ import (
 var (
     // SupportedOS 支持的系统
     SupportedOS = []string{"linux", "freebsd", "windows", "darwin", "android", "ios", "openbsd", "netbsd", "dragonfly", "solaris", "aix", "illumos", "js", "plan9"}
+
     // SupportedArch 支持的架构
     SupportedArch = []string{"amd64", "386", "arm64", "arm", "riscv64", "mips64", "mips64le", "mips", "mipsle", "ppc64", "ppc64le", "s390x", "wasm"}
+
+    // InitSystem 初始化系统
+    InitSystem = map[string]string{
+        "systemd": "systemd",
+        "openrc":  "openrc",
+        "rc.d":    "rcorder",
+    }
 )
 
 // ExtractZip 压缩zip文件

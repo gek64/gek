@@ -19,7 +19,7 @@ func NewService(name string, content string) (s Service) {
 }
 
 // Install 安装服务文件 并Load
-func (s *Service) Install() (err error) {
+func (s Service) Install() (err error) {
     // 检查服务文件夹是否存在
     _, err = os.Stat(ServiceLocation)
     if os.IsNotExist(err) {
@@ -55,26 +55,26 @@ func (s *Service) Install() (err error) {
 }
 
 // Uninstall 卸载服务
-func (s *Service) Uninstall() (err error) {
+func (s Service) Uninstall() (err error) {
     return Uninstall(s.Name)
 }
 
 // Load 开启服务自启+启动服务
-func (s *Service) Load() (err error) {
+func (s Service) Load() (err error) {
     return Load(s.Name)
 }
 
 // Unload 关闭服务自启+停止服务
-func (s *Service) Unload() (err error) {
+func (s Service) Unload() (err error) {
     return Unload(s.Name)
 }
 
 // Reload 重载服务
-func (s *Service) Reload() (err error) {
+func (s Service) Reload() (err error) {
     return Reload(s.Name)
 }
 
 // Status 查看服务状态
-func (s *Service) Status() (err error) {
+func (s Service) Status() (err error) {
     return Status(s.Name)
 }
