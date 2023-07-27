@@ -47,10 +47,12 @@ func (s Service) Install() (err error) {
         return err
     }
 
+    // 开启服务自启+启动服务
     err = s.Load()
     if err != nil {
         return err
     }
+
     return nil
 }
 

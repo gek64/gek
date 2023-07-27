@@ -29,8 +29,8 @@ func NewServiceFromFile(name string, file string) (s Service, err error) {
     return NewService(name, string(bytes)), nil
 }
 
-// 检查系统中的init system
-func checkInitSystem() (initSystemName string, initSystemBin string) {
+// CheckInitSystem 检查系统中的init system
+func CheckInitSystem() (initSystemName string, initSystemBin string) {
     for key, value := range InitSystem {
         _, err := gExec.Exist(value)
         if err != nil {
@@ -47,7 +47,7 @@ func (s Service) Install() (err error) {
     var service gService.Service
 
     // 检查系统中的init system
-    _, initSystemBin := checkInitSystem()
+    _, initSystemBin := CheckInitSystem()
 
     // 分init system创建服务
     switch initSystemBin {
@@ -70,6 +70,7 @@ func (s Service) Install() (err error) {
     if err != nil {
         return err
     }
+
     // 查看服务状态
     err = service.Status()
     if err != nil {
@@ -84,7 +85,7 @@ func (s Service) Uninstall() (err error) {
     var service gService.Service
 
     // 检查系统中的init system
-    _, initSystemBin := checkInitSystem()
+    _, initSystemBin := CheckInitSystem()
 
     // 分init system创建服务
     switch initSystemBin {
@@ -116,7 +117,7 @@ func (s Service) Restart() (err error) {
     var service gService.Service
 
     // 检查系统中的init system
-    _, initSystemBin := checkInitSystem()
+    _, initSystemBin := CheckInitSystem()
 
     // 分init system创建服务
     switch initSystemBin {
