@@ -56,7 +56,7 @@ func InternalDownloaderWithFolder(url string, outputFolder string) (err error) {
         }
     }(response.Body)
 
-    var fileName string = ""
+    var fileName = ""
     // 从header中提取文件路径
     contentDisposition := response.Header.Get("Content-Disposition")
     if contentDisposition != "" {
@@ -156,7 +156,7 @@ func InternalDownloaderFilePath(url string, outputFile string) (err error) {
 
 // ExternalDownloaderWithFolder 外部下载器,指定输出文件夹
 func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
-    var downloader string = ""
+    var downloader = ""
     // 循环找到是否存在外部下载器
     externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
     for _, d := range externalDownloaders {
@@ -174,7 +174,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
             return err
         }
     case "wget":
-        err = gExec.Run(exec.Command("wget", url, "-P", outputFolder, "-N"))
+        err = gExec.Run(exec.Command("wget", url, "-P", outputFolder))
         if err != nil {
             return err
         }
@@ -222,7 +222,7 @@ func ExternalDownloaderWithFolder(url string, outputFolder string) (err error) {
 
 // ExternalDownloaderWithFilePath 外部下载器,指定输出文件路径
 func ExternalDownloaderWithFilePath(url string, outputFile string) (err error) {
-    var downloader string = ""
+    var downloader = ""
     // 循环找到是否存在外部下载器
     externalDownloaders := []string{"aria2c", "wget", "curl", "fetch"}
     for _, d := range externalDownloaders {
