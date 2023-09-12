@@ -15,7 +15,7 @@ var (
 
     // InitSystem 初始化系统
     InitSystem = map[string]string{
-        "systemd": "systemd",
+        "systemd": "systemctl",
         "openrc":  "openrc",
         "rc.d":    "rcorder",
     }
