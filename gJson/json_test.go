@@ -1,80 +1,80 @@
 package gJson
 
 import (
-    "fmt"
-    "github.com/gek64/gek/gFile"
-    "log"
-    "os"
+	"fmt"
+	"github.com/gek64/gek/gFile"
+	"log"
+	"os"
 )
 
 type testJson struct {
-    Name string `json:"name"`
-    Age  int    `json:"age"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
 func ExampleJsoner_ReadFromFile() {
-    // 创建临时json文件
-    f, err := gFile.CreateRandomFile("./", "test*.json", "{\"name\":\"bob\",\"age\":24}")
-    if err != nil {
-        log.Fatal(err)
-    }
-    // 删除临时json文件
-    defer func(name string) {
-        err := os.Remove(name)
-        if err != nil {
-            log.Fatal(err)
-        }
-    }(f)
+	// 创建临时json文件
+	f, err := gFile.CreateRandomFile("./", "test*.json", "{\"name\":\"bob\",\"age\":24}")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// 删除临时json文件
+	defer func(name string) {
+		err := os.Remove(name)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(f)
 
-    // 新建结构体实例
-    tj := new(testJson)
+	// 新建结构体实例
+	tj := new(testJson)
 
-    // 使用json处理体读取json文件到结构体实例中
-    jsoner, err := NewJsonOperator(tj)
-    if err != nil {
-        log.Fatal(err)
-    }
+	// 使用json处理体读取json文件到结构体实例中
+	jsoner, err := NewJsonOperator(tj)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    err = jsoner.ReadFromFile(f)
-    if err != nil {
-        log.Fatal(err)
-    }
+	err = jsoner.ReadFromFile(f)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    fmt.Print(*tj)
+	fmt.Print(*tj)
 
-    // Output:
-    // {bob 24}
+	// Output:
+	// {bob 24}
 }
 
 func ExampleJsoner_WriteToFile() {
-    // 创建结构体实例
-    var tj = testJson{
-        Name: "bob",
-        Age:  24,
-    }
+	// 创建结构体实例
+	var tj = testJson{
+		Name: "bob",
+		Age:  24,
+	}
 
-    jsoner, err := NewJsonOperator(&tj)
-    if err != nil {
-        log.Fatal(err)
-    }
+	jsoner, err := NewJsonOperator(&tj)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-    err = jsoner.WriteToFile("test.json")
+	err = jsoner.WriteToFile("test.json")
 
-    defer func() {
-        err := os.Remove("test.json")
-        if err != nil {
-            log.Fatal(err)
-        }
-    }()
+	defer func() {
+		err := os.Remove("test.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
-    text, err := os.ReadFile("test.json")
+	text, err := os.ReadFile("test.json")
 
-    fmt.Print(string(text), err)
+	fmt.Print(string(text), err)
 
-    // Output:
-    // {
-    //     "name": "bob",
-    //     "age": 24
-    // }<nil>
+	// Output:
+	// {
+	//     "name": "bob",
+	//     "age": 24
+	// }<nil>
 
 }
