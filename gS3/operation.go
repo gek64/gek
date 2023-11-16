@@ -2,11 +2,13 @@ package gS3
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"io"
 	"os"
 )
 
@@ -43,4 +45,16 @@ func Download(sess *session.Session, bucket string, filename string, downloadFil
 		fmt.Printf("file downloaded, %d bytes\n", n)
 		return nil
 	}
+}
+
+func Read(sess *session.Session, bucket string, filename string) (ioReadCloser io.ReadCloser, err error) {
+	client := NewS3Client(sess)
+	result, err := client.GetObjectWithContext(context.Background(), &s3.GetObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(filename),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("Couldn't get object %v:%v. Here's why: %v\n", bucket, filename, err)
+	}
+	return result.Body, nil
 }
