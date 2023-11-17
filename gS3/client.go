@@ -9,21 +9,27 @@ import (
 	"net/http"
 )
 
-func NewS3Session(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, pathStyle bool, allowInsecure bool) (sess *session.Session) {
+type Session struct {
+	*session.Session
+}
+
+func NewS3Session(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, pathStyle bool, allowInsecure bool) (sess *Session) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: allowInsecure},
 	}
 	httpClient := http.Client{Transport: tr}
 
-	return session.Must(session.NewSession(&aws.Config{
-		Endpoint:         aws.String(endpoint),
-		Region:           aws.String(region),
-		Credentials:      credentials.NewStaticCredentials(accessKeyId, secretAccessKey, stsToken),
-		S3ForcePathStyle: aws.Bool(pathStyle),
-		HTTPClient:       &httpClient,
-	}))
+	return &Session{
+		Session: session.Must(session.NewSession(&aws.Config{
+			Endpoint:         aws.String(endpoint),
+			Region:           aws.String(region),
+			Credentials:      credentials.NewStaticCredentials(accessKeyId, secretAccessKey, stsToken),
+			S3ForcePathStyle: aws.Bool(pathStyle),
+			HTTPClient:       &httpClient,
+		})),
+	}
 }
 
-func NewS3Client(sess *session.Session) (client *s3.S3) {
-	return s3.New(sess)
+func (s *Session) NewS3Client() (client *s3.S3) {
+	return s3.New(s.Session)
 }
