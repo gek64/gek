@@ -14,7 +14,7 @@ func (c *Client) SendWebDavRequest(method string, path string, data []byte) (res
 	}
 
 	// build request
-	request, err := http.NewRequest(method, c.URL.ResolveReference(folderUrl).String(), bytes.NewReader(data))
+	request, err := http.NewRequest(method, c.Endpoint.ResolveReference(folderUrl).String(), bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
