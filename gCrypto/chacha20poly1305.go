@@ -1,4 +1,4 @@
-package encrypt
+package gCrypto
 
 import (
 	"crypto/md5"
