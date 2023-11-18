@@ -30,5 +30,3 @@ go get -u github.com/gek64/gek@main
 
 - [goland](https://www.jetbrains.com/go/)
 - [vscode](https://code.visualstudio.com/)
-- [aws s3 sdk](https://docs.aws.amazon.com/sdk-for-go/api/service/s3/)
-- [aws s3 guide](https://docs.aws.amazon.com/zh_cn/AmazonS3/latest/userguide/Welcome.html)
