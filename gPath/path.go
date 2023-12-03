@@ -77,7 +77,7 @@ func MatchFilter(filter []string, s string) bool {
 
 // WalkAll 递归将指定路径下所有文件加入列表(链表或者切片)
 // path为指定的文件路径字符串,listPointer为加入列表的指针,subFolder为是否要递归下级目录的布尔值
-func WalkAll(path string, listPointer interface{}, subFolder bool) error {
+func WalkAll(path string, listPointer any, subFolder bool) error {
 	// 读取文件下所有文件以及文件夹
 	fileInfo, err := os.ReadDir(path)
 	if err != nil {

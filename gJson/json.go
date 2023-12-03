@@ -10,11 +10,11 @@ import (
 
 // JsonOperator json处理体
 type JsonOperator struct {
-	jsonStructPointer interface{}
+	jsonStructPointer any
 }
 
 // NewJsonOperator 输入结构体指针传入json处理体,jsonStructPointer是需要存储到的结构体实例的指针
-func NewJsonOperator(jsonStructPointer interface{}) (*JsonOperator, error) {
+func NewJsonOperator(jsonStructPointer any) (*JsonOperator, error) {
 	// 判断传入v是否是指针类型
 	if reflect.ValueOf(jsonStructPointer).Kind() != reflect.Ptr {
 		return nil, fmt.Errorf("%v is not of pointer type", jsonStructPointer)

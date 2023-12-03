@@ -10,11 +10,11 @@ import (
 
 // XmlOperator xml处理体
 type XmlOperator struct {
-	xmlStructPointer interface{}
+	xmlStructPointer any
 }
 
 // NewXmlOperator 新建xml处理体, xmlPointer是需要存储到的结构体实例的指针
-func NewXmlOperator(xmlStructPointer interface{}) (*XmlOperator, error) {
+func NewXmlOperator(xmlStructPointer any) (*XmlOperator, error) {
 	// 判断传入v是否是指针类型
 	if reflect.ValueOf(xmlStructPointer).Kind() != reflect.Ptr {
 		return nil, fmt.Errorf("%v is not of pointer type", xmlStructPointer)

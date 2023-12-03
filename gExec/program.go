@@ -50,7 +50,7 @@ func StringToCmd(cmdString string) (cmd *exec.Cmd) {
 }
 
 // Run 执行命令并等待命令执行完成,命令可为 string类型或者 *exec.Cmd类型
-func Run(command interface{}) (err error) {
+func Run(command any) (err error) {
 	var cmd = &exec.Cmd{}
 
 	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型
@@ -74,7 +74,7 @@ func Run(command interface{}) (err error) {
 }
 
 // CombinedOutput 执行命令并等待命令执行完成,返回运行后的输出和错误,命令可为 string类型或者 *exec.Cmd类型
-func CombinedOutput(command interface{}) (output string, err error) {
+func CombinedOutput(command any) (output string, err error) {
 	var cmd = &exec.Cmd{}
 
 	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型
@@ -96,7 +96,7 @@ func CombinedOutput(command interface{}) (output string, err error) {
 }
 
 // Output 执行命令并等待命令执行完成,返回运行后的输出,命令可为 string类型或者 *exec.Cmd类型
-func Output(command interface{}) (output string, err error) {
+func Output(command any) (output string, err error) {
 	var cmd = &exec.Cmd{}
 
 	// 同时处理输入的命令,string类型 或者 *exec.Cmd类型

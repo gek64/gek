@@ -1,7 +1,7 @@
 package gSlice
 
 // SliceClear 清空切片
-func SliceClear(s *[]interface{}) {
+func SliceClear(s *[]any) {
 	*s = (*s)[0:0]
 }
 
