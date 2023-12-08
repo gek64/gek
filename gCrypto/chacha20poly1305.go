@@ -1,7 +1,7 @@
 package gCrypto
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"github.com/tink-crypto/tink-go/v2/aead/subtle"
 )
 
@@ -12,11 +12,11 @@ type ChaCha20Poly1305 struct {
 
 func NewChaCha20Poly1305(key []byte, associatedDataSize uint) *ChaCha20Poly1305 {
 	// associated data size
-	if associatedDataSize > md5.Size {
-		associatedDataSize = md5.Size
+	if associatedDataSize > sha256.Size {
+		associatedDataSize = sha256.Size
 	}
 	// use md5 to generate associated data
-	associatedDataCandidate := md5.Sum(key)
+	associatedDataCandidate := sha256.Sum256(key)
 	return &ChaCha20Poly1305{
 		Key:            key,
 		AssociatedData: associatedDataCandidate[0:associatedDataSize],

@@ -3,8 +3,8 @@ module github.com/gek64/gek
 go 1.21.1
 
 require (
-	github.com/aws/aws-sdk-go v1.48.11
-	github.com/tink-crypto/tink-go/v2 v2.0.0
+	github.com/aws/aws-sdk-go v1.48.15
+	github.com/tink-crypto/tink-go/v2 v2.1.0
 )
 
 require (
