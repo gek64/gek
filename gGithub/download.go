@@ -42,14 +42,14 @@ func GetDownloadLink(repo string, appMap map[string]string) (downloadLink string
 	// 从应用集合中找到Github 对应的 part,并通过API获取到下载链接
 	part := appMap[keyPair]
 	if part != "" {
-		downloadLink, err = githubAPI.SearchRelease(part)
-		if err != nil {
-			return "", err
+		release := githubAPI.SearchRelease([]string{part}, []string{})
+		if len(release) <= 0 {
+			return "", fmt.Errorf("can not find the release for %s", keyPair)
 		}
+		downloadLink = release[0].BrowserDownloadURL
 	} else {
 		err = fmt.Errorf("can not find the URL that supports your system/architecture %s", keyPair)
 	}
-
 	return downloadLink, err
 }
 

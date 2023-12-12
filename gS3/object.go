@@ -24,7 +24,12 @@ func (s *Session) DownloadObject(bucket string, filename string, downloadFilenam
 	if err != nil {
 		return 0, err
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			println(err)
+		}
+	}(f)
 
 	return downloader.Download(f, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),

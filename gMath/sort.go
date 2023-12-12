@@ -21,13 +21,13 @@ func SelectionSort(slice []int) []int {
 	length := len(slice)
 	// i当前已完成排序的下标
 	for i := 0; i < length; i++ {
-		min := i
+		m := i
 		for j := i + 1; j < length; j++ {
-			if slice[min] > slice[j] {
-				min = j
+			if slice[m] > slice[j] {
+				m = j
 			}
 		}
-		slice[i], slice[min] = slice[min], slice[i]
+		slice[i], slice[m] = slice[m], slice[i]
 	}
 	return slice
 }

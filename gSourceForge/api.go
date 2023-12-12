@@ -1,7 +1,6 @@
 package gSourceForge
 
 import (
-	"fmt"
 	"github.com/gek64/gek/gXml"
 	"strings"
 )
@@ -39,23 +38,30 @@ func NewAPI(rssUrl string) (api *API, err error) {
 	return api, nil
 }
 
-// SearchPartsInRelease 搜索 API 中 item/title 中的多个名称,返回第一个全匹配的下载链接
-func (api API) SearchPartsInRelease(parts []string) (downloadUrl string, err error) {
+// SearchRelease 搜索
+func (api API) SearchRelease(includes []string, excludes []string) (items []Item) {
+	var list []Item
 
-	for _, i := range api.Channel.Item {
-		matched := true
-
-		for _, part := range parts {
-			if !strings.Contains(i.Title, part) {
+	// 排除不包含
+	for _, exclude := range excludes {
+		for _, item := range api.Channel.Item {
+			if !strings.Contains(item.Title, exclude) {
+				list = append(list, item)
+			}
+		}
+	}
+	// 寻找所有全包含项目
+	for i, item := range list {
+		var matched = true
+		for _, include := range includes {
+			if !strings.Contains(item.Title, include) {
 				matched = false
 				break
 			}
 		}
-
 		if matched {
-			return i.Link, nil
+			items = append(items, list[i])
 		}
 	}
-
-	return "", fmt.Errorf("can not find release with parts %s", parts)
+	return items
 }

@@ -1,7 +1,6 @@
 package gGithub
 
 import (
-	"fmt"
 	"github.com/gek64/gek/gJson"
 	"strings"
 )
@@ -37,33 +36,30 @@ func NewAPI(repo string) (api *API, err error) {
 	return api, nil
 }
 
-// SearchRelease 搜索 API 中 Assets 中的名称,返回第一个匹配的下载链接
-func (api API) SearchRelease(part string) (downloadUrl string, err error) {
-	for _, asset := range api.Assets {
-		if strings.Contains(asset.Name, part) {
-			return asset.BrowserDownloadURL, nil
+// SearchRelease 搜索
+func (api API) SearchRelease(includes []string, excludes []string) (assets []Assets) {
+	var list []Assets
+
+	// 排除不包含
+	for _, exclude := range excludes {
+		for _, asset := range api.Assets {
+			if !strings.Contains(asset.Name, exclude) {
+				list = append(list, asset)
+			}
 		}
 	}
-	return "", fmt.Errorf("can not find release with part %s", part)
-}
-
-// SearchPartsInRelease 搜索 API 中 Assets 中的多个名称,返回第一个匹配的下载链接
-func (api API) SearchPartsInRelease(parts []string) (downloadUrl string, err error) {
-
-	for _, asset := range api.Assets {
+	// 寻找所有全包含项目
+	for i, asset := range list {
 		var matched = true
-
-		for _, part := range parts {
-			if !strings.Contains(asset.Name, part) {
+		for _, include := range includes {
+			if !strings.Contains(asset.Name, include) {
 				matched = false
 				break
 			}
 		}
-
 		if matched {
-			return asset.BrowserDownloadURL, nil
+			assets = append(assets, list[i])
 		}
 	}
-
-	return "", fmt.Errorf("can not find release with parts %s", parts)
+	return assets
 }
