@@ -2,10 +2,11 @@ package gSourceForge
 
 import (
 	"github.com/gek64/gek/gXml"
+	"slices"
 	"strings"
 )
 
-type API struct {
+type Release struct {
 	Channel Channel `xml:"channel"`
 }
 
@@ -22,46 +23,36 @@ type Item struct {
 	Description string `xml:"description"`
 }
 
-// NewAPI 新建 API
-func NewAPI(rssUrl string) (api *API, err error) {
+func NewRelease(releaseApiUrl string) (r *Release, err error) {
 	// 新建xml处理体
-	xmlOperator, err := gXml.NewXmlOperator(&api)
+	xmlOperator, err := gXml.NewXmlOperator(&r)
 	if err != nil {
 		return nil, err
 	}
 	// xml处理体从URL中读取xml数据,数据存储到api中
-	err = xmlOperator.ReadFromURL(rssUrl)
+	err = xmlOperator.ReadFromURL(releaseApiUrl)
 	if err != nil {
 		return nil, err
 	}
 
-	return api, nil
+	return r, nil
 }
 
 // SearchRelease 搜索
-func (api API) SearchRelease(includes []string, excludes []string) (items []Item) {
-	var list []Item
-
+func (r *Release) SearchRelease(includes []string, excludes []string) (assets []Item) {
 	// 排除不包含
 	for _, exclude := range excludes {
-		for _, item := range api.Channel.Item {
-			if !strings.Contains(item.Title, exclude) {
-				list = append(list, item)
-			}
-		}
+		r.Channel.Item = slices.DeleteFunc(r.Channel.Item, func(assets Item) bool {
+			return strings.Contains(assets.Title, exclude)
+		})
 	}
+
 	// 寻找所有全包含项目
-	for i, item := range list {
-		var matched = true
-		for _, include := range includes {
-			if !strings.Contains(item.Title, include) {
-				matched = false
-				break
-			}
-		}
-		if matched {
-			items = append(items, list[i])
-		}
+	for _, include := range includes {
+		r.Channel.Item = slices.DeleteFunc(r.Channel.Item, func(assets Item) bool {
+			return !strings.Contains(assets.Title, include)
+		})
 	}
-	return items
+
+	return r.Channel.Item
 }
