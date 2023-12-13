@@ -22,12 +22,7 @@ func Load(serviceName string) (err error) {
 	}
 
 	// 启动服务
-	err = gExec.Run(exec.Command("rc-service", serviceName, "start"))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("rc-service", serviceName, "start"))
 }
 
 // Unload 关闭服务自启+停止服务
@@ -39,34 +34,19 @@ func Unload(serviceName string) (err error) {
 	}
 
 	// 关闭服务自启
-	err = gExec.Run(exec.Command("rc-update", "del", serviceName))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("rc-update", "del", serviceName))
 }
 
 // Reload 重载服务
 func Reload(serviceName string) (err error) {
 	// 重启服务
-	err = gExec.Run(exec.Command("rc-service", serviceName, "restart"))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("rc-service", serviceName, "restart"))
 }
 
 // Status 查看服务状态
 func Status(serviceName string) (err error) {
 	// 查看服务状态
-	err = gExec.Run(exec.Command("rc-service", serviceName, "status"))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("rc-service", serviceName, "status"))
 }
 
 // Uninstall 卸载服务
@@ -84,10 +64,5 @@ func Uninstall(serviceName string) (err error) {
 	}
 
 	// 删除服务文件
-	err = os.RemoveAll(ServiceLocation + serviceName)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return os.RemoveAll(ServiceLocation + serviceName)
 }

@@ -1,4 +1,4 @@
-package gFlag
+package deprecated
 
 import (
 	"flag"

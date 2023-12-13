@@ -1,4 +1,4 @@
-package gService
+package service
 
 type Service interface {
 	Install() (err error)

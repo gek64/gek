@@ -19,19 +19,14 @@ func Load(serviceName string) (err error) {
 		return err
 	}
 
-	// 启动服务
-	err = gExec.Run(exec.Command("systemctl", "start", serviceName))
-	if err != nil {
-		return err
-	}
-
 	// 开启服务自启
 	err = gExec.Run(exec.Command("systemctl", "enable", serviceName))
 	if err != nil {
 		return err
 	}
 
-	return nil
+	// 启动服务
+	return gExec.Run(exec.Command("systemctl", "start", serviceName))
 }
 
 // Unload 关闭服务自启+停止服务
@@ -49,12 +44,7 @@ func Unload(serviceName string) (err error) {
 	}
 
 	// 重载所有服务
-	err = gExec.Run(exec.Command("systemctl", "daemon-reload"))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("systemctl", "daemon-reload"))
 }
 
 // Reload 重载服务
@@ -66,12 +56,7 @@ func Reload(serviceName string) (err error) {
 	}
 
 	// 重启服务
-	err = gExec.Run(exec.Command("systemctl", "restart", serviceName))
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return gExec.Run(exec.Command("systemctl", "restart", serviceName))
 }
 
 // Status 查看服务状态,返回错误信息为错误的Code 或者 nil
@@ -96,10 +81,5 @@ func Uninstall(serviceName string) (err error) {
 	}
 
 	// 删除服务文件
-	err = os.RemoveAll(ServiceLocation + serviceName)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return os.RemoveAll(ServiceLocation + serviceName)
 }

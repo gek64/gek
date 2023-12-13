@@ -2,149 +2,68 @@ package gApp
 
 import (
 	"fmt"
-	"github.com/gek64/gek/gService"
-	"github.com/gek64/gek/gService/openrc"
-	"github.com/gek64/gek/gService/rcd"
-	"github.com/gek64/gek/gService/systemd"
+	"github.com/gek64/gek/gApp/service"
+	"github.com/gek64/gek/gApp/service/openrc"
+	"github.com/gek64/gek/gApp/service/rcd"
+	"github.com/gek64/gek/gApp/service/systemd"
 	"os"
-	"os/exec"
 )
 
 type Service struct {
-	Name    string
-	Content string
+	service.Service
 }
 
 // NewService 新建服务
-func NewService(name string, content string) (s Service) {
-	return Service{Name: name, Content: content}
+func NewService(name string, content []byte, initSystem string) (*Service, error) {
+	var sv service.Service
+	switch initSystem {
+	case "systemd":
+		sv = systemd.NewService(name, content)
+	case "openrc":
+		sv = openrc.NewService(name, content)
+	case "rc.d":
+		sv = rcd.NewService(name, content)
+	default:
+		return nil, fmt.Errorf("no supported init system found")
+	}
+	return &Service{Service: sv}, nil
 }
 
 // NewServiceFromFile 新建服务(从文件)
-func NewServiceFromFile(name string, file string) (s Service, err error) {
+func NewServiceFromFile(name string, file string, initSystem string) (*Service, error) {
 	bytes, err := os.ReadFile(file)
 	if err != nil {
-		return Service{}, err
+		return nil, err
 	}
-	return NewService(name, string(bytes)), nil
-}
-
-// CheckInitSystem 检查系统中的init system
-func CheckInitSystem() (initSystemName string, initSystemBin string) {
-	for key, value := range InitSystem {
-		_, err := exec.LookPath(value)
-		if err != nil {
-			continue
-		} else {
-			return key, value
-		}
-	}
-	return "", ""
+	return NewService(name, bytes, initSystem)
 }
 
 // Install 安装服务
-func (s Service) Install() (err error) {
-	var service gService.Service
-
-	// 检查系统中的init system
-	_, initSystemBin := CheckInitSystem()
-
-	// 分init system创建服务
-	switch initSystemBin {
-	case InitSystem["systemd"]:
-		service = systemd.NewService(s.Name, s.Content)
-	case InitSystem["openrc"]:
-		service = openrc.NewService(s.Name, s.Content)
-	case InitSystem["rc.d"]:
-		service = rcd.NewService(s.Name, s.Content)
-	default:
-		var supportInitSystemListString string
-		for key := range InitSystem {
-			supportInitSystemListString = supportInitSystemListString + ", " + key
-		}
-		return fmt.Errorf("no supported init system found, currently only %s are supported", supportInitSystemListString)
-	}
-
-	// 安装服务
-	err = service.Install()
-	if err != nil {
-		return err
-	}
-
-	// 查看服务状态
-	err = service.Status()
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (s *Service) Install() (err error) {
+	return s.Service.Install()
 }
 
 // Uninstall 卸载服务
-func (s Service) Uninstall() (err error) {
-	var service gService.Service
-
-	// 检查系统中的init system
-	_, initSystemBin := CheckInitSystem()
-
-	// 分init system创建服务
-	switch initSystemBin {
-	case InitSystem["systemd"]:
-		service = systemd.NewService(s.Name, s.Content)
-	case InitSystem["openrc"]:
-		service = openrc.NewService(s.Name, s.Content)
-	case InitSystem["rc.d"]:
-		service = rcd.NewService(s.Name, s.Content)
-	default:
-		var supportInitSystemListString string
-		for key := range InitSystem {
-			supportInitSystemListString = supportInitSystemListString + ", " + key
-		}
-		return fmt.Errorf("no supported init system found, currently only %s are supported", supportInitSystemListString)
-	}
-
-	// 卸载服务
-	err = service.Uninstall()
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (s *Service) Uninstall() (err error) {
+	return s.Service.Uninstall()
 }
 
-// Restart 重启服务
-func (s Service) Restart() (err error) {
-	var service gService.Service
+// Reload 重载服务
+func (s *Service) Reload() (err error) {
+	return s.Service.Reload()
+}
 
-	// 检查系统中的init system
-	_, initSystemBin := CheckInitSystem()
+// Load 开启服务自启+启动服务
+func (s *Service) Load() (err error) {
+	return s.Service.Load()
+}
 
-	// 分init system创建服务
-	switch initSystemBin {
-	case InitSystem["systemd"]:
-		service = systemd.NewService(s.Name, s.Content)
-	case InitSystem["openrc"]:
-		service = openrc.NewService(s.Name, s.Content)
-	case InitSystem["rc.d"]:
-		service = rcd.NewService(s.Name, s.Content)
-	default:
-		var supportInitSystemListString string
-		for key := range InitSystem {
-			supportInitSystemListString = supportInitSystemListString + ", " + key
-		}
-		return fmt.Errorf("no supported init system found, currently only %s are supported", supportInitSystemListString)
-	}
+// Unload 关闭服务自启+停止服务
+func (s *Service) Unload() (err error) {
+	return s.Service.Unload()
+}
 
-	// 重载服务
-	err = service.Reload()
-	if err != nil {
-		return err
-	}
-	// 查看服务状态
-	err = service.Status()
-	if err != nil {
-		return err
-	}
-
-	return nil
+// Status 查看服务状态
+func (s *Service) Status() (err error) {
+	return s.Service.Status()
 }

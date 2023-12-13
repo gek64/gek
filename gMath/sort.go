@@ -8,7 +8,7 @@ import (
 // randSlice 生成长度为n,每个值最大为max的随机切片
 func randSlice(n int, max int) []int {
 	// 根据时间的随机数seed
-	rand.Seed(time.Now().Unix())
+	rand.New(rand.NewSource(time.Now().Unix()))
 	slice := make([]int, n)
 	for i := 0; i < n; i++ {
 		slice[i] = rand.Intn(max)
