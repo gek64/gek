@@ -14,7 +14,7 @@ var (
 // Load 开启服务自启+启动服务
 func Load(serviceName string) (err error) {
 	// 重载所有服务
-	err = gExec.Run("systemctl daemon-reload")
+	err = gExec.Run(exec.Command("systemctl", "daemon-reload"))
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func Unload(serviceName string) (err error) {
 	}
 
 	// 重载所有服务
-	err = gExec.Run("systemctl daemon-reload")
+	err = gExec.Run(exec.Command("systemctl", "daemon-reload"))
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func Unload(serviceName string) (err error) {
 // Reload 重载服务
 func Reload(serviceName string) (err error) {
 	// 重载所有服务
-	err = gExec.Run("systemctl daemon-reload")
+	err = gExec.Run(exec.Command("systemctl", "daemon-reload"))
 	if err != nil {
 		return err
 	}

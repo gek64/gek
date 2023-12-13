@@ -2,12 +2,12 @@ package gApp
 
 import (
 	"fmt"
-	"github.com/gek64/gek/gExec"
 	"github.com/gek64/gek/gService"
 	"github.com/gek64/gek/gService/openrc"
 	"github.com/gek64/gek/gService/rcd"
 	"github.com/gek64/gek/gService/systemd"
 	"os"
+	"os/exec"
 )
 
 type Service struct {
@@ -32,7 +32,7 @@ func NewServiceFromFile(name string, file string) (s Service, err error) {
 // CheckInitSystem 检查系统中的init system
 func CheckInitSystem() (initSystemName string, initSystemBin string) {
 	for key, value := range InitSystem {
-		_, err := gExec.Exist(value)
+		_, err := exec.LookPath(value)
 		if err != nil {
 			continue
 		} else {
