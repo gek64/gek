@@ -5,39 +5,34 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
-	"fmt"
 	"golang.org/x/crypto/blake2b"
 	"golang.org/x/crypto/blake2s"
-	"hash"
 	"hash/crc32"
 	"hash/crc64"
-	"io"
-	"log"
-	"os"
 )
 
 func Crc32Sum(file string) ([]byte, error) {
-	return Hash(crc32.NewIEEE(), file)
+	return HashFile(crc32.NewIEEE(), file)
 }
 
 func Crc64Sum(file string) ([]byte, error) {
-	return Hash(crc64.New(crc64.MakeTable(crc64.ECMA)), file)
+	return HashFile(crc64.New(crc64.MakeTable(crc64.ECMA)), file)
 }
 
 func Md5Sum(file string) ([]byte, error) {
-	return Hash(md5.New(), file)
+	return HashFile(md5.New(), file)
 }
 
 func Sha1Sum(file string) ([]byte, error) {
-	return Hash(sha1.New(), file)
+	return HashFile(sha1.New(), file)
 }
 
 func Sha256Sum(file string) ([]byte, error) {
-	return Hash(sha256.New(), file)
+	return HashFile(sha256.New(), file)
 }
 
 func Sha512Sum(file string) ([]byte, error) {
-	return Hash(sha512.New(), file)
+	return HashFile(sha512.New(), file)
 }
 
 func Blake2s256Sum(file string) ([]byte, error) {
@@ -45,7 +40,7 @@ func Blake2s256Sum(file string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return Hash(h, file)
+	return HashFile(h, file)
 }
 
 func Blake2b256Sum(file string) ([]byte, error) {
@@ -53,7 +48,7 @@ func Blake2b256Sum(file string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return Hash(h, file)
+	return HashFile(h, file)
 }
 
 func Blake2b384Sum(file string) ([]byte, error) {
@@ -61,7 +56,7 @@ func Blake2b384Sum(file string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return Hash(h, file)
+	return HashFile(h, file)
 }
 
 func Blake2b512Sum(file string) ([]byte, error) {
@@ -69,33 +64,5 @@ func Blake2b512Sum(file string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return Hash(h, file)
-}
-
-func Hash(h hash.Hash, file string) ([]byte, error) {
-	// check file
-	fileInfo, err := os.Stat(file)
-	if err != nil || fileInfo.IsDir() {
-		return nil, fmt.Errorf("%s is not a valid file", file)
-	}
-
-	// open file
-	f, err := os.OpenFile(file, os.O_RDONLY, 0644)
-	if err != nil {
-		return nil, err
-	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			log.Panicln(err)
-		}
-	}(f)
-
-	// copy data to hash
-	_, err = io.Copy(h, f)
-	if err != nil {
-		return nil, err
-	}
-
-	return h.Sum(nil), nil
+	return HashFile(h, file)
 }
