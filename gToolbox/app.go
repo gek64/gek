@@ -33,23 +33,3 @@ func CheckRoot() bool {
 	}
 	return false
 }
-
-// InstallStatus 检查应用与服务的安装状态
-func InstallStatus(appLocation string, serviceLocation string) (bool, bool) {
-	var appStatus = false
-	var serviceStatus = false
-
-	// 检查应用安装状态
-	_, err := os.Stat(appLocation)
-	if err == nil {
-		appStatus = true
-	}
-
-	// 检查服务安装状态
-	_, err = os.Stat(serviceLocation)
-	if err == nil {
-		serviceStatus = true
-	}
-	return appStatus, serviceStatus
-
-}
