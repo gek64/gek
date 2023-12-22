@@ -18,39 +18,52 @@ func Download(fileUrl string, filename string, outputFolder string) (err error) 
 		return err
 	}
 
-	// 处理输出文件夹及文件
+	// 文件名
 	if filename == "" {
-		filename = path.Base(resp.Request.URL.Path)
+		filename = path.Base(fileUrl)
 	}
-	if outputFolder == "" {
-		outputFolder, _ = os.Getwd()
-	}
-
+	// 指定的输出文件夹
+	outputFolder, _ = filepath.Abs(outputFolder)
 	err = os.MkdirAll(outputFolder, 0755)
 	if err != nil {
 		return err
 	}
-	output, err := os.Create(filepath.Join(outputFolder, filename))
+
+	// 文件名中的输出文件夹
+	err = os.MkdirAll(filepath.Dir(filepath.Join(outputFolder, filename)), 0755)
 	if err != nil {
 		return err
 	}
 
-	// 将数据写入到文件中
-	_, err = io.Copy(output, resp.Body)
+	// 创建输出文件
+	o, err := os.Create(filepath.Join(outputFolder, filename))
+	if err != nil {
+		return err
+	}
+
+	// 将数据写入到输出文件中
+	_, err = io.Copy(o, resp.Body)
 	return err
 }
 
 // DownloadWithCurl 使用 curl 下载
 func DownloadWithCurl(fileUrl string, filename string, outputFolder string) (err error) {
-	// 不指定文件名
-	if filename == "" {
-		return gExec.Run(exec.Command("curl", "--create-dirs", "--output-dir", outputFolder, "-LOJ", fileUrl))
-	}
-
-	// 指定文件名
-	output, err := os.Create(filepath.Join(outputFolder, filename))
+	// 处理输出文件夹
+	outputFolder, _ = filepath.Abs(outputFolder)
+	err = os.MkdirAll(outputFolder, 0755)
 	if err != nil {
 		return err
 	}
-	return gExec.Run(exec.Command("curl", "--create-dirs", "--output-dir", outputFolder, "-Lo", output.Name(), fileUrl))
+
+	// 不指定文件名
+	if filename == "" {
+		cmd := exec.Command("curl", "--create-dirs", "-LOJ", fileUrl)
+		cmd.Dir = outputFolder
+		return gExec.Run(cmd)
+	}
+
+	// 指定文件名
+	cmd := exec.Command("curl", "--create-dirs", "-Lo", filepath.Join(outputFolder, filename), fileUrl)
+	cmd.Dir = outputFolder
+	return gExec.Run(cmd)
 }
