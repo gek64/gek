@@ -1,4 +1,4 @@
-package gPath
+package deprecated
 
 import (
 	"container/list"
@@ -8,30 +8,6 @@ import (
 	"regexp"
 	"strings"
 )
-
-// Mkdir Create path
-func Mkdir(path string) error {
-	return os.Mkdir(path, 0755)
-}
-
-// MkdirAll Create all path
-func MkdirAll(path string) error {
-	return os.MkdirAll(path, 0755)
-}
-
-// Stat Check if path string stats
-func Stat(path string) (os.FileInfo, error) {
-	return os.Stat(path)
-}
-
-// Exist Check if path string exist? and is a folder?
-func Exist(path string) (exist bool, isFolder bool) {
-	fileInfo, err := Stat(path)
-	if os.IsNotExist(err) {
-		return false, false
-	}
-	return true, fileInfo.IsDir()
-}
 
 // WildcardToRegex 通配符 * ? 转换为正则表达式
 func WildcardToRegex(wildcard string) string {

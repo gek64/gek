@@ -1,4 +1,4 @@
-package gString
+package deprecated
 
 import (
 	"path/filepath"
