@@ -22,11 +22,13 @@ func Download(fileUrl string, filename string, outputFolder string) (err error) 
 	if filename == "" {
 		filename = path.Base(resp.Request.URL.Path)
 	}
-	if outputFolder != "" {
-		err = os.MkdirAll(outputFolder, 0755)
-		if err != nil {
-			return err
-		}
+	if outputFolder == "" {
+		outputFolder, _ = os.Getwd()
+	}
+
+	err = os.MkdirAll(outputFolder, 0755)
+	if err != nil {
+		return err
 	}
 	output, err := os.Create(filepath.Join(outputFolder, filename))
 	if err != nil {
