@@ -1,6 +1,7 @@
 package gDownloader
 
 import (
+	"fmt"
 	"github.com/gek64/gek/gExec"
 	"io"
 	"net/http"
@@ -11,32 +12,30 @@ import (
 )
 
 // Download 下载
-func Download(fileUrl string, filename string, outputFolder string) (err error) {
+func Download(fileUrl string, outputFile string, outputFolder string) (err error) {
 	// 使用get方法连接url
 	resp, err := http.Get(fileUrl)
 	if err != nil {
 		return err
 	}
 
-	// 文件名
-	if filename == "" {
-		filename = path.Base(fileUrl)
+	// 输出文件
+	if outputFile == "" {
+		outputFile = path.Base(fileUrl)
 	}
-	// 指定的输出文件夹
-	outputFolder, _ = filepath.Abs(outputFolder)
-	err = os.MkdirAll(outputFolder, 0755)
+
+	// 输出文件夹
+	if outputFolder != "" {
+		outputFile = filepath.Join(outputFolder, outputFile)
+	}
+
+	// 创建最终输出文件夹
+	err = os.MkdirAll(filepath.Dir(outputFile), 0755)
 	if err != nil {
 		return err
 	}
 
-	// 文件名中的输出文件夹
-	err = os.MkdirAll(filepath.Dir(filepath.Join(outputFolder, filename)), 0755)
-	if err != nil {
-		return err
-	}
-
-	// 创建输出文件
-	o, err := os.Create(filepath.Join(outputFolder, filename))
+	o, err := os.Create(outputFile)
 	if err != nil {
 		return err
 	}
@@ -47,23 +46,40 @@ func Download(fileUrl string, filename string, outputFolder string) (err error) 
 }
 
 // DownloadWithCurl 使用 curl 下载
-func DownloadWithCurl(fileUrl string, filename string, outputFolder string) (err error) {
-	// 处理输出文件夹
-	outputFolder, _ = filepath.Abs(outputFolder)
-	err = os.MkdirAll(outputFolder, 0755)
-	if err != nil {
-		return err
+func DownloadWithCurl(fileUrl string, outputFile string, outputFolder string) (err error) {
+	var cmd *exec.Cmd
+
+	if outputFolder == "" {
+		if outputFile == "" {
+			cmd = exec.Command("curl", "-LOJ", fileUrl)
+		} else {
+			err = os.MkdirAll(filepath.Dir(outputFile), 0755)
+			if err != nil {
+				return err
+			}
+
+			cmd = exec.Command("curl", "-Lo", outputFile, fileUrl)
+		}
+	} else {
+		if outputFile == "" {
+			err = os.MkdirAll(outputFolder, 0755)
+			if err != nil {
+				return err
+			}
+
+			cmd = exec.Command("curl", "-LOJ", fileUrl)
+			cmd.Dir = outputFolder
+		} else {
+			outputFile = filepath.Join(outputFolder, outputFile)
+			err = os.MkdirAll(filepath.Dir(outputFile), 0755)
+			if err != nil {
+				return err
+			}
+
+			cmd = exec.Command("curl", "-Lo", outputFile, fileUrl)
+			fmt.Println(cmd.String())
+		}
 	}
 
-	// 不指定文件名
-	if filename == "" {
-		cmd := exec.Command("curl", "--create-dirs", "-LOJ", fileUrl)
-		cmd.Dir = outputFolder
-		return gExec.Run(cmd)
-	}
-
-	// 指定文件名
-	cmd := exec.Command("curl", "--create-dirs", "-Lo", filepath.Join(outputFolder, filename), fileUrl)
-	cmd.Dir = outputFolder
 	return gExec.Run(cmd)
 }
