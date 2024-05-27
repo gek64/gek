@@ -3,6 +3,7 @@ package gApp
 import (
 	"fmt"
 	"github.com/gek64/gek/gApp/pm"
+	"github.com/gek64/gek/gApp/pm/apk"
 	"github.com/gek64/gek/gApp/pm/apt"
 	"github.com/gek64/gek/gApp/pm/pkg"
 )
@@ -19,6 +20,8 @@ func NewPm(pkgManager string, pkgName string) (*Pm, error) {
 		np = apt.NewPm(pkgName)
 	case "pkg":
 		np = pkg.NewPm(pkgName)
+	case "apk":
+		np = apk.NewPm(pkgName)
 	default:
 		return nil, fmt.Errorf("no supported package manager")
 	}

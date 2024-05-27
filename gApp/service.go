@@ -14,15 +14,15 @@ type Service struct {
 }
 
 // NewService 新建服务
-func NewService(name string, content []byte, initSystem string) (*Service, error) {
+func NewService(initSystem string, serviceName string, serviceContent []byte) (*Service, error) {
 	var sv service.Service
 	switch initSystem {
 	case "systemd":
-		sv = systemd.NewService(name, content)
+		sv = systemd.NewService(serviceName, serviceContent)
 	case "openrc":
-		sv = openrc.NewService(name, content)
+		sv = openrc.NewService(serviceName, serviceContent)
 	case "rc.d":
-		sv = rcd.NewService(name, content)
+		sv = rcd.NewService(serviceName, serviceContent)
 	default:
 		return nil, fmt.Errorf("no supported init system found")
 	}
@@ -30,12 +30,12 @@ func NewService(name string, content []byte, initSystem string) (*Service, error
 }
 
 // NewServiceFromFile 新建服务(从文件)
-func NewServiceFromFile(name string, file string, initSystem string) (*Service, error) {
-	bytes, err := os.ReadFile(file)
+func NewServiceFromFile(initSystem string, serviceName string, serviceFile string) (*Service, error) {
+	bytes, err := os.ReadFile(serviceFile)
 	if err != nil {
 		return nil, err
 	}
-	return NewService(name, bytes, initSystem)
+	return NewService(initSystem, serviceName, bytes)
 }
 
 // Install 安装服务
