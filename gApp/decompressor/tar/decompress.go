@@ -40,5 +40,5 @@ func DecompressFileToFile(tarFile string, fileInTar string, newFile string) (err
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(newFile, bytes, 0755)
+	return os.WriteFile(newFile, bytes, 0644)
 }

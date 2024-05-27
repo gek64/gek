@@ -34,5 +34,5 @@ func DecompressFileToFile(zipFile string, fileInZip string, newFile string) (err
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(newFile, bytes, 0755)
+	return os.WriteFile(newFile, bytes, 0644)
 }
