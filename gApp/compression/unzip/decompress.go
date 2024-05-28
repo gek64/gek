@@ -25,7 +25,7 @@ func Decompress(zipFile string, location string, fileList ...string) (err error)
 
 // DecompressFileToByte 解压一个文件,并获取文件内容到比特切片
 func DecompressFileToByte(zipFile string, fileInZip string) (fb []byte, err error) {
-	return gExec.Output(exec.Command("unzip", "-p", zipFile, fileInZip))
+	return exec.Command("unzip", "-p", zipFile, fileInZip).Output()
 }
 
 // DecompressFileToFile 解压一个文件,并获取文件内容存储到另一个文件

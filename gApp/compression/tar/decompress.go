@@ -31,7 +31,7 @@ func Decompress(tarFile string, location string, fileList ...string) (err error)
 
 // DecompressFileToByte 解压一个文件,并获取文件内容到比特切片
 func DecompressFileToByte(tarFile string, fileInTar string) (fb []byte, err error) {
-	return gExec.Output(exec.Command("tar", "-xvOf", tarFile, fileInTar))
+	return exec.Command("tar", "-xvOf", tarFile, fileInTar).Output()
 }
 
 // DecompressFileToFile 解压一个文件,并获取文件内容存储到另一个文件
