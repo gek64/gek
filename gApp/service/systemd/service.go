@@ -39,7 +39,7 @@ func (s *Service) Install() (err error) {
 	return os.WriteFile(filepath.Join(ServiceLocation, s.Name), s.Content, 0644)
 }
 
-// Uninstall 卸载服务,并且unload
+// Uninstall 卸载服务,执行Unload
 func (s *Service) Uninstall() (err error) {
 	return Uninstall(s.Name)
 }

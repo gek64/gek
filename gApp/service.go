@@ -38,12 +38,12 @@ func NewServiceFromFile(initSystem string, serviceName string, serviceFile strin
 	return NewService(initSystem, serviceName, bytes)
 }
 
-// Install 安装服务
+// Install 安装服务,不执行Load
 func (s *Service) Install() (err error) {
 	return s.Service.Install()
 }
 
-// Uninstall 卸载服务,并且unload
+// Uninstall 卸载服务,执行Unload
 func (s *Service) Uninstall() (err error) {
 	return s.Service.Uninstall()
 }
