@@ -18,7 +18,6 @@ func Load(serviceName string) (err error) {
 	if err != nil {
 		return err
 	}
-
 	// 启动服务
 	return gExec.Run(exec.Command("systemctl", "start", serviceName))
 }

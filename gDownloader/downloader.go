@@ -39,6 +39,8 @@ func Download(fileUrl string, outputFile string, outputFolder string) (err error
 	if err != nil {
 		return err
 	}
+	// 函数结束时关闭文件,不然会造成其他对此文件的操作失败
+	defer o.Close()
 
 	// 将数据写入到输出文件中
 	_, err = io.Copy(o, resp.Body)
