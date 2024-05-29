@@ -1,7 +1,6 @@
 package systemd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -29,17 +28,11 @@ func (s *Service) Install() (err error) {
 		}
 	}
 
-	// 检查服务文件是否存在
-	_, err = os.Stat(ServiceLocation + s.Name)
-	if os.IsExist(err) {
-		return fmt.Errorf("gek_service %s is already installed", s.Name)
-	}
-
 	// 创建服务文件
 	return os.WriteFile(filepath.Join(ServiceLocation, s.Name), s.Content, 0644)
 }
 
-// Uninstall 卸载服务,执行Unload
+// Uninstall 卸载服务
 func (s *Service) Uninstall() (err error) {
 	return Uninstall(s.Name)
 }

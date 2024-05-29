@@ -1,7 +1,6 @@
 package openrc
 
 import (
-	"fmt"
 	"github.com/gek64/gek/gExec"
 	"os"
 	"os/exec"
@@ -51,18 +50,5 @@ func Status(serviceName string) (err error) {
 
 // Uninstall 卸载服务
 func Uninstall(serviceName string) (err error) {
-	// 检查服务是否已经存在,不存在则返回错误
-	_, err = os.Stat(ServiceLocation + serviceName)
-	if os.IsNotExist(err) {
-		return fmt.Errorf("gek_service %s is not installed", serviceName)
-	}
-
-	// 关闭服务自启+停止服务
-	err = Unload(serviceName)
-	if err != nil {
-		return err
-	}
-
-	// 删除服务文件
 	return os.RemoveAll(ServiceLocation + serviceName)
 }

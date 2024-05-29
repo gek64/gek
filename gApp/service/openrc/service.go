@@ -1,7 +1,6 @@
 package openrc
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -29,12 +28,6 @@ func (s *Service) Install() (err error) {
 		}
 	}
 
-	// 检查服务文件是否存在
-	_, err = os.Stat(filepath.Join(ServiceLocation, s.Name))
-	if os.IsExist(err) {
-		return fmt.Errorf("gek_service %s is already installed", s.Name)
-	}
-
 	// 创建服务文件
 	err = os.WriteFile(filepath.Join(ServiceLocation, s.Name), s.Content, 0755)
 	if err != nil {
@@ -45,7 +38,7 @@ func (s *Service) Install() (err error) {
 	return os.Chmod(filepath.Join(ServiceLocation, s.Name), 0755)
 }
 
-// Uninstall 卸载服务,执行Unload
+// Uninstall 卸载服务
 func (s *Service) Uninstall() (err error) {
 	return Uninstall(s.Name)
 }
