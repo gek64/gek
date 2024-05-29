@@ -18,7 +18,7 @@ func NewService(name string, content []byte) (s *Service) {
 	}
 }
 
-// Install 安装服务文件 并Load
+// Install 安装服务文件
 func (s *Service) Install() (err error) {
 	// 检查服务文件夹是否存在
 	_, err = os.Stat(ServiceLocation)
@@ -45,7 +45,7 @@ func (s *Service) Install() (err error) {
 	return os.Chmod(filepath.Join(ServiceLocation, s.Name), 0755)
 }
 
-// Uninstall 卸载服务
+// Uninstall 卸载服务,并且unload
 func (s *Service) Uninstall() (err error) {
 	return Uninstall(s.Name)
 }

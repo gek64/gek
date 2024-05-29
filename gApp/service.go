@@ -43,7 +43,7 @@ func (s *Service) Install() (err error) {
 	return s.Service.Install()
 }
 
-// Uninstall 卸载服务
+// Uninstall 卸载服务,并且unload
 func (s *Service) Uninstall() (err error) {
 	return s.Service.Uninstall()
 }
