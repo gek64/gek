@@ -1,4 +1,4 @@
-package rcd
+package procd
 
 import (
 	"os"

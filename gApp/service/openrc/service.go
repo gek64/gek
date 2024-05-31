@@ -29,7 +29,7 @@ func (s *Service) Install() (err error) {
 	}
 
 	// 创建服务文件
-	err = os.WriteFile(filepath.Join(ServiceLocation, s.Name), s.Content, 0755)
+	err = os.WriteFile(filepath.Join(ServiceLocation, s.Name), s.Content, 0644)
 	if err != nil {
 		return err
 	}

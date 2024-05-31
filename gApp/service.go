@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gek64/gek/gApp/service"
 	"github.com/gek64/gek/gApp/service/openrc"
+	"github.com/gek64/gek/gApp/service/procd"
 	"github.com/gek64/gek/gApp/service/rcd"
 	"github.com/gek64/gek/gApp/service/systemd"
 	"os"
@@ -23,6 +24,8 @@ func NewService(initSystem string, serviceName string, serviceContent []byte) (*
 		sv = openrc.NewService(serviceName, serviceContent)
 	case "rc.d":
 		sv = rcd.NewService(serviceName, serviceContent)
+	case "procd":
+		sv = procd.NewService(serviceName, serviceContent)
 	default:
 		return nil, fmt.Errorf("no supported init system found")
 	}
