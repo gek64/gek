@@ -8,6 +8,14 @@ import (
 
 // Decompress 解压文件到指定目录
 func Decompress(zipFile string, location string, fileList ...string) (err error) {
+	// 创建默认输出路径
+	if location != "" {
+		err = os.MkdirAll(location, 0755)
+		if err != nil {
+			return err
+		}
+	}
+
 	// 不提供解压的部分文件时,解压所有文件
 	if len(fileList) == 0 {
 		return gExec.Run(exec.Command("unzip", "-d", location, "-o", zipFile))
