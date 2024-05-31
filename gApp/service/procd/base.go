@@ -14,8 +14,8 @@ var (
 
 // Load 开启服务自启+启动服务
 func Load(serviceName string) (err error) {
-	// 开启服务自启
-	err = gExec.Run(exec.Command("service", serviceName, "enable"))
+	// 开启服务自启(openwrt 下使用 command.run() 会报错,使用 command.start() 代替)
+	err = exec.Command("service", serviceName, "enable").Start()
 	if err != nil {
 		return err
 	}
