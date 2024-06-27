@@ -3,6 +3,7 @@ package gDownloader
 import (
 	"github.com/gek64/gek/gExec"
 	"io"
+	"mime"
 	"net/http"
 	"os"
 	"os/exec"
@@ -18,9 +19,16 @@ func Download(fileUrl string, outputFile string, outputFolder string) (err error
 		return err
 	}
 
-	// 输出文件
+	// 参数中未指定输出文件名时, 解析连接中的文件名
 	if outputFile == "" {
-		outputFile = path.Base(resp.Request.URL.Path)
+		// https://stackoverflow.com/a/28845255
+		// 通过 mime, 解析 Header 中的 Content-Disposition
+		_, m, _ := mime.ParseMediaType(resp.Header.Get("Content-Disposition"))
+		if m["filename"] != "" {
+			outputFile = m["filename"]
+		} else {
+			outputFile = path.Base(resp.Request.URL.Path)
+		}
 	}
 
 	// 仅有这一种情况需要进行文件与输出路径的拼接
@@ -48,13 +56,20 @@ func Download(fileUrl string, outputFile string, outputFolder string) (err error
 
 // DownloadWithCurl 使用 curl 下载
 func DownloadWithCurl(fileUrl string, outputFile string, outputFolder string) (err error) {
-	// 参数中未指定输出文件名时,使用参数中下载url的最后路径作为文件名
+	// 参数中未指定输出文件名时, 解析连接中的文件名
 	if outputFile == "" {
+		// 建立连接
 		resp, err := http.Get(fileUrl)
 		if err != nil {
 			return err
 		}
-		outputFile = path.Base(resp.Request.URL.Path)
+		// 解析文件名
+		_, m, _ := mime.ParseMediaType(resp.Header.Get("Content-Disposition"))
+		if m["filename"] != "" {
+			outputFile = m["filename"]
+		} else {
+			outputFile = path.Base(resp.Request.URL.Path)
+		}
 	}
 
 	// 仅有这一种情况需要进行文件与输出路径的拼接
