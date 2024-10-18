@@ -2,85 +2,36 @@ package gS3
 
 import (
 	"bytes"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"context"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"os"
 )
 
-func (s *Session) UploadObject(bucket string, filename string, data []byte) (result *s3manager.UploadOutput, err error) {
-	uploader := s3manager.NewUploader(s.Session)
-	return uploader.Upload(&s3manager.UploadInput{
+// 用法 https://docs.aws.amazon.com/zh_cn/code-library/latest/ug/go_2_s3_code_examples.html
+
+func (c *Client) UploadObject(bucket string, filename string, data []byte) (*manager.UploadOutput, error) {
+	return manager.NewUploader(c).Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
-		Body:   bytes.NewReader(data),
-	})
+		Body:   bytes.NewReader(data)},
+	)
 }
 
-func (s *Session) DownloadObject(bucket string, filename string, downloadFilename string) (n int64, err error) {
-	downloader := s3manager.NewDownloader(s.Session)
-
+func (c *Client) DownloadObject(bucket string, filename string, downloadFilename string) (int64, error) {
 	f, err := os.Create(downloadFilename)
 	if err != nil {
 		return 0, err
 	}
-	defer func(f *os.File) {
-		err := f.Close()
-		if err != nil {
-			println(err)
-		}
-	}(f)
+	defer f.Close()
 
-	return downloader.Download(f, &s3.GetObjectInput{
+	return manager.NewDownloader(c).Download(context.TODO(), f, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
 	})
 }
 
-func (s *Session) PutObject(bucket string, filename string, data []byte) (result *s3.PutObjectOutput, err error) {
-	client := s.NewS3Client()
-	return client.PutObjectWithContext(aws.BackgroundContext(), &s3.PutObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(filename),
-		Body:   aws.ReadSeekCloser(bytes.NewReader(data)),
-	})
-}
-
-func (s *Session) GetObject(bucket string, filename string) (result *s3.GetObjectOutput, err error) {
-	client := s.NewS3Client()
-	return client.GetObjectWithContext(aws.BackgroundContext(), &s3.GetObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(filename),
-	})
-}
-
-func (s *Session) DeleteObject(bucket string, filename string) (result *s3.DeleteObjectOutput, err error) {
-	client := s.NewS3Client()
-	return client.DeleteObjectWithContext(aws.BackgroundContext(), &s3.DeleteObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(filename),
-	})
-}
-
-func (s *Session) HeadObject(bucket string, filename string) (result *s3.HeadObjectOutput, err error) {
-	client := s.NewS3Client()
-	return client.HeadObjectWithContext(aws.BackgroundContext(), &s3.HeadObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(filename),
-	})
-}
-
-func (s *Session) ListObjectsV2(bucket string) (result *s3.ListObjectsV2Output, err error) {
-	client := s.NewS3Client()
-	return client.ListObjectsV2WithContext(aws.BackgroundContext(), &s3.ListObjectsV2Input{
-		Bucket: aws.String(bucket),
-	})
-}
-
-func (s *Session) ListObjectVersions(bucket string, filename string) (result *s3.ListObjectVersionsOutput, err error) {
-	client := s.NewS3Client()
-	return client.ListObjectVersionsWithContext(aws.BackgroundContext(), &s3.ListObjectVersionsInput{
-		Bucket: aws.String(bucket),
-		Prefix: aws.String(filename),
-	})
+func (c *Client) DeleteObject(bucket string, filename string) (*s3.DeleteObjectOutput, error) {
+	return c.Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(filename)})
 }

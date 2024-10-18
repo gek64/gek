@@ -2,34 +2,28 @@ package gS3
 
 import (
 	"crypto/tls"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"net/http"
 )
 
-type Session struct {
-	*session.Session
+type Client struct {
+	*s3.Client
 }
 
-func NewS3Session(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, pathStyle bool, allowInsecure bool) (sess *Session) {
+func NewS3Client(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, usePathStyle bool, allowInsecure bool) (client *s3.Client) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: allowInsecure},
 	}
 	httpClient := http.Client{Transport: tr}
 
-	return &Session{
-		Session: session.Must(session.NewSession(&aws.Config{
-			Endpoint:         aws.String(endpoint),
-			Region:           aws.String(region),
-			Credentials:      credentials.NewStaticCredentials(accessKeyId, secretAccessKey, stsToken),
-			S3ForcePathStyle: aws.Bool(pathStyle),
-			HTTPClient:       &httpClient,
-		})),
-	}
-}
-
-func (s *Session) NewS3Client() (client *s3.S3) {
-	return s3.New(s.Session)
+	return s3.New(s3.Options{
+		BaseEndpoint: aws.String(endpoint),
+		Region:       region,
+		Credentials:  credentials.NewStaticCredentialsProvider(accessKeyId, secretAccessKey, stsToken),
+		HTTPClient:   &httpClient,
+	}, func(options *s3.Options) {
+		options.UsePathStyle = usePathStyle
+	})
 }
