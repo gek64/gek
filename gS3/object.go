@@ -12,7 +12,7 @@ import (
 // 用法 https://docs.aws.amazon.com/zh_cn/code-library/latest/ug/go_2_s3_code_examples.html
 
 func (c *Client) UploadObject(bucket string, filename string, data []byte) (*manager.UploadOutput, error) {
-	return manager.NewUploader(c).Upload(context.TODO(), &s3.PutObjectInput{
+	return manager.NewUploader(c.S3Client).Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
 		Body:   bytes.NewReader(data)},
@@ -26,12 +26,12 @@ func (c *Client) DownloadObject(bucket string, filename string, downloadFilename
 	}
 	defer f.Close()
 
-	return manager.NewDownloader(c).Download(context.TODO(), f, &s3.GetObjectInput{
+	return manager.NewDownloader(c.S3Client).Download(context.TODO(), f, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
 	})
 }
 
 func (c *Client) DeleteObject(bucket string, filename string) (*s3.DeleteObjectOutput, error) {
-	return c.Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(filename)})
+	return c.S3Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{Bucket: aws.String(bucket), Key: aws.String(filename)})
 }

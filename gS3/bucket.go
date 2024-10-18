@@ -7,9 +7,9 @@ import (
 )
 
 func (c *Client) CreateBucket(bucket string) (*s3.CreateBucketOutput, error) {
-	return c.Client.CreateBucket(context.TODO(), &s3.CreateBucketInput{Bucket: aws.String(bucket)})
+	return c.S3Client.CreateBucket(context.TODO(), &s3.CreateBucketInput{Bucket: aws.String(bucket)})
 }
 
 func (c *Client) DeleteBucket(bucket string) (*s3.DeleteBucketOutput, error) {
-	return c.Client.DeleteBucket(context.TODO(), &s3.DeleteBucketInput{Bucket: aws.String(bucket)})
+	return c.S3Client.DeleteBucket(context.TODO(), &s3.DeleteBucketInput{Bucket: aws.String(bucket)})
 }

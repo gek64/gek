@@ -9,21 +9,23 @@ import (
 )
 
 type Client struct {
-	*s3.Client
+	S3Client *s3.Client
 }
 
-func NewS3Client(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, usePathStyle bool, allowInsecure bool) (client *s3.Client) {
+func NewS3Client(endpoint string, region string, accessKeyId string, secretAccessKey string, stsToken string, usePathStyle bool, allowInsecure bool) (client *Client) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: allowInsecure},
 	}
 	httpClient := http.Client{Transport: tr}
 
-	return s3.New(s3.Options{
-		BaseEndpoint: aws.String(endpoint),
-		Region:       region,
-		Credentials:  credentials.NewStaticCredentialsProvider(accessKeyId, secretAccessKey, stsToken),
-		HTTPClient:   &httpClient,
-	}, func(options *s3.Options) {
-		options.UsePathStyle = usePathStyle
-	})
+	return &Client{
+		S3Client: s3.New(s3.Options{
+			BaseEndpoint: aws.String(endpoint),
+			Region:       region,
+			Credentials:  credentials.NewStaticCredentialsProvider(accessKeyId, secretAccessKey, stsToken),
+			HTTPClient:   &httpClient,
+		}, func(options *s3.Options) {
+			options.UsePathStyle = usePathStyle
+		}),
+	}
 }
