@@ -19,17 +19,26 @@ func (c *Client) UploadObject(bucket string, filename string, data []byte) (*man
 	)
 }
 
-func (c *Client) DownloadObject(bucket string, filename string, downloadFilename string) (int64, error) {
-	f, err := os.Create(downloadFilename)
+func (c *Client) DownloadObject(bucket string, filename string, downloadFilename string) error {
+	bs, err := c.GetObject(bucket, filename)
 	if err != nil {
-		return 0, err
+		return err
 	}
-	defer f.Close()
+	return os.WriteFile(downloadFilename, bs, 0644)
+}
 
-	return manager.NewDownloader(c.S3Client).Download(context.TODO(), f, &s3.GetObjectInput{
+func (c *Client) GetObject(bucket string, filename string) ([]byte, error) {
+	buffer := manager.NewWriteAtBuffer([]byte{})
+
+	_, err := manager.NewDownloader(c.S3Client).Download(context.TODO(), buffer, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	return buffer.Bytes(), nil
 }
 
 func (c *Client) DeleteObject(bucket string, filename string) (*s3.DeleteObjectOutput, error) {
