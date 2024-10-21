@@ -1,4 +1,4 @@
-package gSourceForge
+package sourceForge
 
 import (
 	"github.com/gek64/gek/gXml"

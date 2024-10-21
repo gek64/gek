@@ -1,4 +1,4 @@
-package gGithub
+package github
 
 import (
 	"github.com/gek64/gek/gJson"
