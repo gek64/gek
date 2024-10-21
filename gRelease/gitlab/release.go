@@ -65,4 +65,5 @@ func (r *Release) SearchRelease(includes []string, excludes []string) (assets []
 	//
 	//}
 	//return r.Assets
+	return nil
 }
