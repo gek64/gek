@@ -19,38 +19,31 @@ type Assets struct {
 	BrowserDownloadURL string `json:"browser_download_url"`
 }
 
-// NewRelease 新建 Release
 // https://docs.github.com/en/rest/releases
-func NewRelease(releaseApiUrl string) (r *Release, err error) {
-	// 新建json处理体
+// https://api.github.com/repos/microsoft/terminal/releases
+func newRelease[T *[]Release | *Release](releaseApiUrl string) (r T, err error) {
+	// 新建 json 处理器
 	jsonOperator, err := gJson.NewJsonOperator(&r)
 	if err != nil {
 		return nil, err
 	}
-
-	// json处理体从URL中读取json数据,数据存储到githubAPI中
-	err = jsonOperator.ReadFromURL(releaseApiUrl)
-	if err != nil {
-		return nil, err
-	}
-
-	return r, nil
+	// 从 releaseApiUrl 中读取数据存储到结构体中
+	return r, jsonOperator.ReadFromURL(releaseApiUrl)
 }
 
-func NewReleaseLatest(repo string) (r *Release, err error) {
-	return NewRelease("https://api.github.com/repos/" + repo + "/releases/latest")
+func GetReleases(repo string) (rs *[]Release, err error) {
+	return newRelease[*[]Release]("https://api.github.com/repos/" + repo + "/releases")
 }
 
-func NewReleaseByTag(repo string, tag string) (r *Release, err error) {
-	return NewRelease("https://api.github.com/repos/" + repo + "/releases/tags/" + tag)
+func GetReleaseLatest(repo string) (r *Release, err error) {
+	return newRelease[*Release]("https://api.github.com/repos/" + repo + "/releases/latest")
 }
 
-func NewReleaseById(repo string, id string) (r *Release, err error) {
-	return NewRelease("https://api.github.com/repos/" + repo + "/releases/" + id)
+func GetReleaseByTagName(repo string, tagName string) (r *Release, err error) {
+	return newRelease[*Release]("https://api.github.com/repos/" + repo + "/releases/tags/" + tagName)
 }
 
-// SearchRelease 搜索
-func (r *Release) SearchRelease(includes []string, excludes []string) (assets []Assets) {
+func (r *Release) GetAssets(includes []string, excludes []string) (assets []Assets) {
 	// 排除不包含
 	for _, exclude := range excludes {
 		r.Assets = slices.DeleteFunc(r.Assets, func(assets Assets) bool {

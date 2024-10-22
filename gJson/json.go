@@ -34,11 +34,7 @@ func (j *JsonOperator) ReadFromFile(filename string) error {
 		return err
 	}
 	// json数据写入结构体
-	err = json.Unmarshal(fileData, j.jsonStructPointer)
-	if err != nil {
-		return err
-	}
-	return nil
+	return json.Unmarshal(fileData, j.jsonStructPointer)
 }
 
 // ReadFromURL 输入json文件URL,将url中包含的json数据存储到json处理体中
@@ -49,11 +45,7 @@ func (j *JsonOperator) ReadFromURL(url string) error {
 		return err
 	}
 	// 将response中的json数据解析，然后写入处理体
-	err = json.NewDecoder(response.Body).Decode(j.jsonStructPointer)
-	if err != nil {
-		return err
-	}
-	return nil
+	return json.NewDecoder(response.Body).Decode(j.jsonStructPointer)
 }
 
 // WriteToFile 写入json文件，filename是要写入的文件的名称
@@ -64,9 +56,5 @@ func (j *JsonOperator) WriteToFile(filename string) error {
 		return err
 	}
 	// json的byte数据写入json文件
-	err = os.WriteFile(filename, jsonData, 0644)
-	if err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(filename, jsonData, 0644)
 }

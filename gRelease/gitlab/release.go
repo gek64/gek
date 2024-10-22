@@ -2,6 +2,8 @@ package gitlab
 
 import (
 	"github.com/gek64/gek/gJson"
+	"slices"
+	"strings"
 )
 
 type Release struct {
@@ -28,42 +30,42 @@ type Links struct {
 }
 
 // https://docs.gitlab.com/ee/api/releases
-// https://gitlab.com/api/v4/projects/278964/releases or https://gitlab.com/api/v4/projects/gitlab-org%2Fgitlab/releases
+// https://gitlab.com/api/v4/projects/36189/releases
+// https://gitlab.com/api/v4/projects/fdroid%2ffdroidclient/releases
 func newRelease[T *[]Release | *Release](releaseApiUrl string) (r T, err error) {
 	// 新建 json 处理器
 	jsonOperator, err := gJson.NewJsonOperator(&r)
 	if err != nil {
 		return nil, err
 	}
-
-	// 从 releaseApiUrl 中读取数据存储到 []Release 结构体数组中
+	// 从 releaseApiUrl 中读取数据存储到结构体中
 	return r, jsonOperator.ReadFromURL(releaseApiUrl)
 }
 
-func NewReleaseByTagName(projectId string, tagName string) (r *Release, err error) {
-	return newRelease[*Release]("https://gitlab.com/api/v4/projects/" + projectId + "/releases/" + tagName)
-}
-
-func NewReleaseLatest(projectId string) (r *Release, err error) {
-	return newRelease[*Release]("https://gitlab.com/api/v4/projects/" + projectId + "/releases/permalink/latest")
-}
-
-func NewReleases(projectId string) (rs *[]Release, err error) {
+func GetReleases(projectId string) (rs *[]Release, err error) {
 	return newRelease[*[]Release]("https://gitlab.com/api/v4/projects/" + projectId + "/releases")
 }
 
-// SearchRelease 搜索
-func (r *Release) SearchRelease(includes []string, excludes []string) (assets []Assets) {
-	//// 排除不包含
-	//for _, exclude := range excludes {
-	//	for _, link := range r.Assets.Links {
-	//
-	//	}
-	//}
-	//// 寻找所有全包含项目
-	//for _, include := range includes {
-	//
-	//}
-	//return r.Assets
-	return nil
+func GetReleaseLatest(projectId string) (r *Release, err error) {
+	return newRelease[*Release]("https://gitlab.com/api/v4/projects/" + projectId + "/releases/permalink/latest")
+}
+
+func GetReleaseByTagName(projectId string, tagName string) (r *Release, err error) {
+	return newRelease[*Release]("https://gitlab.com/api/v4/projects/" + projectId + "/releases/" + tagName)
+}
+
+func (r *Release) GetAssets(includes []string, excludes []string) (l []Links) {
+	// 排除不包含
+	for _, exclude := range excludes {
+		r.Assets.Links = slices.DeleteFunc(r.Assets.Links, func(l Links) bool {
+			return strings.Contains(l.Name, exclude)
+		})
+	}
+	// 寻找所有全包含项目
+	for _, include := range includes {
+		r.Assets.Links = slices.DeleteFunc(r.Assets.Links, func(l Links) bool {
+			return !strings.Contains(l.Name, include)
+		})
+	}
+	return r.Assets.Links
 }
